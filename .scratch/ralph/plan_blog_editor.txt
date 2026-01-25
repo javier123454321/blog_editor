@@ -1,0 +1,103 @@
+# Blog Editor Application - Implementation Plan
+
+## Overview
+A visual markdown editor for an 11ty blog. Allows editing existing posts, creating new posts, and managing changes through GitHub pull requests.
+
+## Project Structure
+```
+/blog-edit                    # This repository (editor app)
+  /blog                       # Git submodule: git@github.com:javier123454321/blog.git
+    /src/blog/*.md            # Markdown files to edit
+  /editor                     # Vue 3 frontend application
+  editor-server.js            # Express backend (single file)
+  .env                        # Environment variables
+```
+
+## Tech Stack
+- **Frontend**: Vue 3 (Composition API + TypeScript), Vite
+- **Backend**: Node.js + Express (single file)
+- **WYSIWYG**: Lightweight editor (e.g., Milkdown or similar)
+- **Auth**: SHA256 hash comparison (no sessions, stateless)
+- **Git**: Local git commands + GitHub API for PRs
+
+## Environment Variables (.env)
+- `BLOG_EDITOR_PASSWORD_HASH` - SHA256 hash of password
+- `GITHUB_TOKEN` - Personal access token for PR creation
+- `GITHUB_REPO_OWNER` - Repository owner (e.g., "javier123454321")
+- `GITHUB_REPO_NAME` - Repository name (e.g., "blog")
+
+---
+
+## Implementation Tasks (In Order)
+
+### Phase 1: Backend Server Setup with Auth
+1. Initialize Node.js project at root with Express
+2. Create `editor-server.js` with basic Express setup
+3. Add `POST /auth` endpoint - accepts password, compares SHA256 hash against `BLOG_EDITOR_PASSWORD_HASH`
+4. Add auth middleware that validates password header on all protected routes
+5. Add CORS configuration for development
+
+### Phase 2: File Operations API
+6. Add `GET /files` - recursively list all `.md` files in `blog/src/blog/`
+7. Add `GET /file/:path` - read content of specific markdown file
+8. Add `POST /file/:path` - write/create markdown file content
+9. Validate paths to prevent directory traversal attacks
+
+### Phase 3: Frontend Setup
+10. Initialize Vue 3 + TypeScript project in `/editor` folder using Vite
+11. Configure Vite proxy to backend for development
+12. Create basic layout: header, sidebar (file tree), main content area
+13. Create login component with password input
+14. Store auth state (password hash in memory for API calls)
+
+### Phase 4: File Tree & Editor UI
+15. Create FileTree component - fetches and displays `/files` as tree structure
+16. Create collapsible sidebar (mobile-friendly)
+17. Integrate lightweight WYSIWYG markdown editor
+18. Create raw markdown editor mode (textarea/code editor)
+19. Create preview mode (render markdown to HTML)
+20. Add tabs to switch between WYSIWYG / Markdown / Preview modes
+21. Wire up file selection → load content → edit → save flow
+
+### Phase 5: Branch Operations
+22. Add `GET /branches` endpoint - list all git branches
+23. Add `POST /checkout` endpoint - switch to specified branch (git checkout)
+24. Add `POST /branch/create` endpoint - create and checkout new branch
+25. Create branch selector dropdown in header
+26. Create "new branch" modal/form
+27. Display current branch name in header
+
+### Phase 6: PR Creation
+28. Add `POST /commit` endpoint - stage and commit changes with message
+29. Add `POST /push` endpoint - push current branch to remote
+30. Add `POST /pr` endpoint - create PR via GitHub API (or update if exists)
+31. Create "Propose Changes" button in UI
+32. Create commit message input dialog
+33. Show PR URL on successful creation
+
+---
+
+## API Endpoints Summary
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /auth | Verify password (returns success/failure) |
+| GET | /files | List all markdown files |
+| GET | /file/:path | Get file content |
+| POST | /file/:path | Save file content |
+| GET | /branches | List git branches |
+| POST | /checkout | Switch branch |
+| POST | /branch/create | Create new branch |
+| POST | /commit | Commit staged changes |
+| POST | /push | Push to remote |
+| POST | /pr | Create/update pull request |
+
+---
+
+## Key Implementation Notes
+
+- **Auth**: Stateless. Frontend sends password with each request, backend hashes and compares. Simple but effective for single-user.
+- **File paths**: Always relative to `blog/src/blog/`. Validate to prevent `../` traversal.
+- **Git operations**: Use `child_process.exec` to run git commands. The blog submodule must be the working directory for git commands.
+- **GitHub API**: Use Octokit or simple fetch to `api.github.com` for PR creation.
+- **Error handling**: Return clear error messages. Frontend displays them to user.

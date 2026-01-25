@@ -1,12 +1,18 @@
 <template>
   <div id="app" class="app">
-    <h1>Blog Editor</h1>
-    <p>Welcome to the Blog Editor. Start editing your blog posts.</p>
+    <LoginView v-if="!isAuthenticated" />
+    <div v-else class="editor-container">
+      <h1>Blog Editor</h1>
+      <p>Welcome to the Blog Editor. Start editing your blog posts.</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// App component
+import { useAuth } from './composables/useAuth';
+import LoginView from './views/LoginView.vue';
+
+const { isAuthenticated } = useAuth();
 </script>
 
 <style scoped>
@@ -15,8 +21,11 @@
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #333;
+}
+
+.editor-container {
+  text-align: center;
   padding: 2rem;
 }
 

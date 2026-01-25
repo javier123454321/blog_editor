@@ -1,0 +1,40 @@
+# Ralph Progress Log
+Started: Sun Jan 25 03:47:25 UTC 2026
+---
+
+## Sun Jan 25 03:51:00 UTC 2026 - US-006
+- Implemented POST /file/:path endpoint to save markdown file content
+- Endpoint accepts { content: string } in request body
+- Returns { success: true, path: string } on success
+- Includes proper path validation to prevent directory traversal (prevents .. in paths)
+- Creates parent directories automatically using fs.mkdirSync with recursive flag
+- Files changed: editor-server.ts
+- **Learnings for future iterations:**
+  - Path validation must check for '..' and use path.resolve() to ensure resolved path stays within BLOG_DIR
+  - fs.mkdirSync with recursive: true safely creates nested directories
+  - Both GET and POST endpoints should have identical path validation logic for consistency
+  - Error responses follow consistent { success: false, error: string } format
+---
+
+## Sun Jan 25 - US-007
+- Initialized Vue 3 + TypeScript frontend project in /editor folder
+- Created Vite project structure with proper TypeScript configuration (strict mode enabled)
+- Configured vite.config.ts to:
+  - Proxy /api/* requests to http://localhost:3001
+  - Serve on port 5173
+- Created basic App.vue component with placeholder message
+- Set up TypeScript configuration with strict mode and ES2020 target
+- Files created:
+  - editor/package.json (Vue 3, Vite, TypeScript dependencies)
+  - editor/vite.config.ts (proxy configuration)
+  - editor/tsconfig.json (strict TypeScript)
+  - editor/src/main.ts (Vue app entry)
+  - editor/src/App.vue (placeholder component)
+  - editor/src/env.d.ts (Vue type definitions)
+  - editor/index.html (HTML entry point)
+- **Learnings for future iterations:**
+  - Vue 3 + Vite project structure requires env.d.ts for proper .vue module typing
+  - Vite proxy configuration in server.proxy works with target URL
+  - TypeScript strict mode in editor requires proper vue-tsc setup
+  - The editor is a separate npm package in /editor subdirectory
+---
