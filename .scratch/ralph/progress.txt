@@ -2,6 +2,12 @@
 Started: Sun Jan 25 03:47:25 UTC 2026
 ---
 
+## Codebase Patterns
+- Vue 3 composables pattern for state management (useAuth composable)
+- API requests from frontend include auth headers via composables
+- Component structure: views/ for full page components, composables/ for shared logic
+- LocalStorage used for persisting authentication state
+
 ## Sun Jan 25 03:51:00 UTC 2026 - US-006
 - Implemented POST /file/:path endpoint to save markdown file content
 - Endpoint accepts { content: string } in request body
@@ -38,3 +44,27 @@ Started: Sun Jan 25 03:47:25 UTC 2026
   - TypeScript strict mode in editor requires proper vue-tsc setup
   - The editor is a separate npm package in /editor subdirectory
 ---
+
+## Sun Jan 25 - US-008
+- Created LoginView.vue component with password input and submit button
+- Implemented useAuth composable for managing authentication state
+- Features:
+  - Password input field with loading state feedback
+  - Error message display for failed authentication
+  - LocalStorage persistence of password
+  - API call to POST /api/auth with password
+  - Success/failure handling
+- Updated App.vue to conditionally render LoginView or editor content based on auth state
+- Files created:
+  - editor/src/composables/useAuth.ts (auth state management)
+  - editor/src/views/LoginView.vue (login UI)
+- Files modified:
+  - editor/src/App.vue (conditional rendering)
+- **Learnings for future iterations:**
+  - Vue 3 composables use ref() for reactive state and computed() for derived state
+  - useAuth() returns object with isAuthenticated, authenticate(), getPassword(), logout() methods
+  - localStorage is used alongside ref state for persistence across page reloads
+  - LoginView styling uses gradient background and centered form layout for professional appearance
+  - Future components should call getPassword() when making API requests that need X-Auth-Password header
+---
+
