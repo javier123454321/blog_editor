@@ -10,6 +10,8 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@types/highlight.js": "^9.12.4",
+    "marked": "^17.0.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {

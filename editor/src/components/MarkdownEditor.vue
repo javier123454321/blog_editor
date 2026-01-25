@@ -18,29 +18,35 @@ import hljs from 'highlight.js';
 export default defineComponent({
   name: 'MarkdownEditor',
   props: {
-    content: {
+    modelValue: {
       type: String,
       required: true,
     },
   },
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const content = ref(props.content);
+    const localContent = ref(props.modelValue);
     const highlightedContent = ref('');
 
+    watch(() => props.modelValue, (newVal) => {
+      localContent.value = newVal;
+      highlightContent();
+    });
+
     const highlightContent = () => {
-      highlightedContent.value = hljs.highlightAuto(content.value).value;
+      highlightedContent.value = hljs.highlightAuto(localContent.value).value;
     };
 
     const handleInput = (event: Event) => {
       const value = (event.target as HTMLTextAreaElement).value;
-      content.value = value;
-      emit('update', value);
+      localContent.value = value;
+      emit('update:modelValue', value);
     };
 
-    watch(() => content.value, highlightContent, { immediate: true });
+    watch(() => localContent.value, highlightContent, { immediate: true });
 
     return {
-      content,
+      content: localContent,
       highlightedContent,
       handleInput,
     };

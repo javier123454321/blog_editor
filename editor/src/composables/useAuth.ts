@@ -63,5 +63,6 @@ const data = await response.json() as AuthResponse;
     authenticate,
     getPassword,
     logout,
+    password,
   };
 }

@@ -1,17 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "NodeNext",
-    "lib": ["ES2020", "dom"],
-    "outDir": "./dist",
-    "rootDir": "./",
     "strict": true,
-    "esModuleInterop": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "dom"],
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "nodenext"
+    "moduleResolution": "Node"
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["editor/src/**/*"]
 }

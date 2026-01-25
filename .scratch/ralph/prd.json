@@ -222,10 +222,20 @@
       "passes": true,
       "notes": "TabNavigator with Edit/Preview modes"
     },
-{
-            "id": "US-014",
-             "title": "Wire up file selection and content loading",
-         "in-progress": true,
+    {
+      "id": "US-014",
+      "title": "Wire up file selection and content loading",
+      "description": "As a user, I need to click a file and see its content loaded into the editor.",
+      "acceptanceCriteria": [
+        "Clicking file in FileTree loads content via GET /api/file/:path",
+        "Content is passed to MarkdownEditor and PreviewPane",
+        "Loading state is handled gracefully",
+        "Error handling for failed loads",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     },
