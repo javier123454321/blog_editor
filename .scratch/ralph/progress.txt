@@ -130,3 +130,23 @@
   - Error handling should return stderr or error.message for debugging
   - All quality checks (typecheck, lint, test) passed successfully
 ---
+## Jan 25 2026 - US-023
+- Implemented POST /pr endpoint in editor-server.ts
+  - Accepts { title: string, body?: string } in request body
+  - Uses GitHub REST API with fetch to create or update pull requests
+  - Gets current branch with git rev-parse --abbrev-ref HEAD
+  - Automatically detects base branch (main/master) from git remote show origin
+  - Checks for existing open PR for the current branch using GitHub API
+  - Updates existing PR if found, creates new PR otherwise
+  - Returns { success: true, url: string } with PR URL
+  - Uses GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME from environment
+- Files changed: editor-server.ts, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - GitHub REST API requires Authorization header with Bearer token
+  - Use Accept: application/vnd.github+json and X-GitHub-Api-Version: 2022-11-28 headers
+  - Check for existing PRs using GET /repos/:owner/:repo/pulls?head=:owner::branch&state=open
+  - Update PR with PATCH /repos/:owner/:repo/pulls/:number
+  - Create PR with POST /repos/:owner/:repo/pulls (requires title, head, base, optional body)
+  - git remote show origin can be parsed to find the default branch name
+  - All quality checks (typecheck, lint, test) passed successfully
+---
