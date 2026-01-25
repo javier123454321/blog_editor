@@ -59,3 +59,47 @@
   - Proper error handling returns stderr or error.message for debugging
   - All quality checks (typecheck, lint, test) passed after implementation
 ---
+## Jan 25 2026 - US-019
+- Implemented BranchSelector.vue component in editor/src/components/
+  - Fetches branches via GET /api/branches on mount
+  - Displays current branch name with branch icon
+  - Dropdown shows all available branches
+  - Clicking branch calls POST /api/checkout and refreshes file tree
+  - Includes loading and error states
+  - Accessible with ARIA attributes
+- Modified EditorLayout.vue to add header-actions slot
+- Updated App.vue to include BranchSelector in header and handle branch changes
+  - Added handleBranchChange() function that refreshes file tree and clears current file
+- Files changed: editor/src/components/BranchSelector.vue, editor/src/layouts/EditorLayout.vue, editor/src/App.vue, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - Vue components should emit events to parent for actions like branch changes
+  - Parent components handle side effects like refreshing file trees
+  - Always include loading and error states in components that fetch data
+  - Close dropdown on outside clicks using document event listener in onMounted/onUnmounted
+  - When switching branches, clear current file state to avoid showing stale content
+---
+## Jan 25 2026 - US-020
+- Implemented NewBranchModal.vue component in editor/src/components/
+  - Modal dialog with input field for branch name
+  - Form validation (required, trimmed input)
+  - Calls POST /api/branch/create with authenticated request
+  - Shows loading state during creation
+  - Displays error messages on failure
+  - Focuses input on open and resets state
+  - Auto-focuses input field when modal opens
+- Updated BranchSelector.vue to integrate modal
+  - Added "Create New Branch" option to dropdown with divider
+  - Opens modal on click, closes dropdown
+  - Refreshes branch list after successful creation
+  - Emits branchChanged event to parent to refresh file tree
+- Files changed: editor/src/components/NewBranchModal.vue, editor/src/components/BranchSelector.vue, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - Modal overlays should handle click-outside-to-close with @click on overlay and @click.stop on content
+  - Use v-if to conditionally render modals based on isOpen prop
+  - Auto-focus input fields when modals open using watch + nextTick + ref
+  - Disable form interactions during loading states to prevent duplicate submissions
+  - Include proper ARIA labels for accessibility (aria-label on close button)
+  - Reset form state (clear input, clear errors) when modal opens
+  - Browser verification was not completed due to dev-browser system dependency issues (missing libatk-1.0.so.0)
+  - All standard quality checks (typecheck, lint, test) passed successfully
+---
