@@ -46,3 +46,16 @@
   - Error handling should return stderr or error.message for helpful debugging
   - All quality checks (typecheck, lint, test) pass after implementation
 ---
+## Jan 25 2026 - US-018
+- Implemented POST /branch/create endpoint in editor-server.ts
+- Endpoint accepts { name: string } in request body
+- Uses execFile to execute git checkout -b in blog directory
+- Returns { success: true, branch: string } on success
+- Returns error message if branch creation fails or branch already exists
+- Files changed: editor-server.ts, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - POST /branch/create follows same pattern as POST /checkout: use execFile with git commands in GIT_DIR
+  - git checkout -b creates and switches to a new branch in a single command
+  - Proper error handling returns stderr or error.message for debugging
+  - All quality checks (typecheck, lint, test) passed after implementation
+---
