@@ -305,6 +305,138 @@ app.post('/push', (req: Request, res: Response) => {
   });
 });
 
+// POST /pr endpoint - Create or update pull request
+app.post('/pr', async (req: Request, res: Response) => {
+  const { title, body } = req.body;
+
+  if (!title || typeof title !== 'string') {
+    return res.status(400).json({ success: false, error: 'PR title is required' });
+  }
+
+  const githubToken = process.env.GITHUB_TOKEN;
+  const repoOwner = process.env.GITHUB_REPO_OWNER;
+  const repoName = process.env.GITHUB_REPO_NAME;
+
+  if (!githubToken || !repoOwner || !repoName) {
+    return res.status(500).json({ 
+      success: false, 
+      error: 'GitHub configuration missing (GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME)' 
+    });
+  }
+
+  // Get current branch name
+  execFile('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd: GIT_DIR }, async (branchError, branchStdout, branchStderr) => {
+    if (branchError) {
+      console.error(`Error getting current branch: ${branchError.message}`);
+      return res.status(500).json({ success: false, error: `Failed to get current branch: ${branchStderr || branchError.message}` });
+    }
+
+    const currentBranch = branchStdout.trim();
+
+    // Determine base branch (main or master)
+    execFile('git', ['remote', 'show', 'origin'], { cwd: GIT_DIR }, async (remoteError, remoteStdout, remoteStderr) => {
+      let baseBranch = 'main';
+      
+      if (!remoteError && remoteStdout) {
+        const match = remoteStdout.match(/HEAD branch: (\S+)/);
+        if (match) {
+          baseBranch = match[1];
+        }
+      }
+
+      try {
+        // Check if PR already exists for this branch
+        const listPRsResponse = await fetch(
+          `https://api.github.com/repos/${repoOwner}/${repoName}/pulls?head=${repoOwner}:${currentBranch}&state=open`,
+          {
+            headers: {
+              'Authorization': `Bearer ${githubToken}`,
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28'
+            }
+          }
+        );
+
+        if (!listPRsResponse.ok) {
+          const errorData = await listPRsResponse.json();
+          return res.status(listPRsResponse.status).json({ 
+            success: false, 
+            error: `Failed to check existing PRs: ${errorData.message || listPRsResponse.statusText}` 
+          });
+        }
+
+        const existingPRs = await listPRsResponse.json();
+
+        if (existingPRs.length > 0) {
+          // Update existing PR
+          const existingPR = existingPRs[0];
+          const updateResponse = await fetch(
+            `https://api.github.com/repos/${repoOwner}/${repoName}/pulls/${existingPR.number}`,
+            {
+              method: 'PATCH',
+              headers: {
+                'Authorization': `Bearer ${githubToken}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ title, body: body || '' })
+            }
+          );
+
+          if (!updateResponse.ok) {
+            const errorData = await updateResponse.json();
+            return res.status(updateResponse.status).json({ 
+              success: false, 
+              error: `Failed to update PR: ${errorData.message || updateResponse.statusText}` 
+            });
+          }
+
+          const updatedPR = await updateResponse.json();
+          return res.json({ success: true, url: updatedPR.html_url });
+        } else {
+          // Create new PR
+          const createResponse = await fetch(
+            `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${githubToken}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                title,
+                body: body || '',
+                head: currentBranch,
+                base: baseBranch
+              })
+            }
+          );
+
+          if (!createResponse.ok) {
+            const errorData = await createResponse.json();
+            return res.status(createResponse.status).json({ 
+              success: false, 
+              error: `Failed to create PR: ${errorData.message || createResponse.statusText}` 
+            });
+          }
+
+          const newPR = await createResponse.json();
+          return res.json({ success: true, url: newPR.html_url });
+        }
+      } catch (error) {
+        console.error('Error creating/updating PR:', error);
+        return res.status(500).json({ 
+          success: false, 
+          error: error instanceof Error ? error.message : 'Unknown error occurred' 
+        });
+      }
+    });
+  });
+});
+
 // Start server
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);

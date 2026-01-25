@@ -387,7 +387,7 @@
         "Typecheck passes"
       ],
       "priority": 23,
-      "in-progress": false,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     },
