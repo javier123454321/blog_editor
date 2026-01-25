@@ -353,9 +353,9 @@
         "Typecheck passes"
       ],
       "priority": 21,
-      "in-progress": true,
-      "passes": false,
-      "notes": ""
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented POST /commit endpoint with git add and git commit, returns commit hash"
     },
     {
       "id": "US-022",
@@ -369,7 +369,7 @@
         "Typecheck passes"
       ],
       "priority": 22,
-      "in-progress": false,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     },

@@ -293,6 +293,18 @@ app.post('/commit', (req: Request, res: Response) => {
   });
 });
 
+// POST /push endpoint
+app.post('/push', (req: Request, res: Response) => {
+  execFile('git', ['push'], { cwd: GIT_DIR }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing git push: ${error.message}`);
+      return res.status(500).json({ success: false, error: `Failed to push: ${stderr || error.message}` });
+    }
+
+    res.json({ success: true });
+  });
+});
+
 // Start server
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);

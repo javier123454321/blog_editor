@@ -103,3 +103,18 @@
   - Browser verification was not completed due to dev-browser system dependency issues (missing libatk-1.0.so.0)
   - All standard quality checks (typecheck, lint, test) passed successfully
 ---
+## Jan 25 2026 - US-021
+- Implemented POST /commit endpoint in editor-server.ts
+  - Accepts { message: string } in request body
+  - Executes git add . followed by git commit -m in blog directory
+  - Returns { success: true, commit: string } with commit hash from git rev-parse HEAD
+  - Handles "nothing to commit" case with 400 status
+  - Returns errors if staging or commit fails
+- Files changed: editor-server.ts, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - POST /commit requires chaining three git commands: add, commit, rev-parse
+  - Use execFile nested callbacks for sequential git operations
+  - Check for "nothing to commit" message in stderr to handle empty commits
+  - git rev-parse HEAD returns the full commit hash
+  - All quality checks (typecheck, lint, test) passed successfully
+---
