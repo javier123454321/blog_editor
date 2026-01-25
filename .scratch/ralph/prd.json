@@ -318,9 +318,9 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 19,
-      "in-progress": true,
-      "passes": false,
-      "notes": ""
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented BranchSelector.vue component with dropdown, integrated into EditorLayout header, calls GET /api/branches and POST /api/checkout, refreshes file tree on branch change"
     },
     {
       "id": "US-020",
@@ -337,7 +337,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 20,
-      "in-progress": false,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     },

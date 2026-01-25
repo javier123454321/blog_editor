@@ -30,14 +30,26 @@
           <span class="branch-name">{{ branch.name }}</span>
           <span v-if="branch.current" class="check-icon">✓</span>
         </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item create-new" @click="openNewBranchModal">
+          <span class="branch-icon">+</span>
+          <span class="branch-name">Create New Branch</span>
+        </div>
       </div>
     </div>
+    
+    <NewBranchModal 
+      :isOpen="isModalOpen" 
+      @close="closeNewBranchModal"
+      @created="handleBranchCreated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { useAuth } from '../composables/useAuth';
+import NewBranchModal from './NewBranchModal.vue';
 
 interface Branch {
   name: string;
@@ -53,6 +65,7 @@ const branches = ref<Branch[]>([]);
 const loading = ref(true);
 const error = ref('');
 const isOpen = ref(false);
+const isModalOpen = ref(false);
 
 const currentBranch = computed(() => {
   const current = branches.value.find(b => b.current);
@@ -125,6 +138,22 @@ const selectBranch = async (branchName: string) => {
       error.value = '';
     }, 3000);
   }
+};
+
+const openNewBranchModal = () => {
+  isOpen.value = false;
+  isModalOpen.value = true;
+};
+
+const closeNewBranchModal = () => {
+  isModalOpen.value = false;
+};
+
+const handleBranchCreated = async (branchName: string) => {
+  // Refresh branches list to show the new branch
+  await fetchBranches();
+  // Emit event to parent to refresh file tree
+  emit('branchChanged');
 };
 
 onMounted(() => {
@@ -279,5 +308,26 @@ export default {
 
 .dropdown-menu::-webkit-scrollbar-thumb:hover {
   background: #999;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 0.5rem 0;
+}
+
+.dropdown-item.create-new {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.dropdown-item.create-new:hover {
+  background-color: #e3f2fd;
+}
+
+.dropdown-item.create-new .branch-icon {
+  color: #007bff;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 </style>
