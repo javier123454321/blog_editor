@@ -34,3 +34,15 @@
   - POST /file/:path endpoint already exists and works correctly with auth
   - User feedback messages should auto-dismiss after a few seconds
 ---
+## Jan 25 2026 - US-017
+- Implemented POST /checkout endpoint in editor-server.ts
+- Endpoint accepts { branch: string } in request body
+- Uses execFile to execute git checkout in blog directory
+- Returns { success: true, branch: string } on success
+- Returns error message if checkout fails or branch doesn't exist
+- Files changed: editor-server.ts, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - Follow same pattern as GET /branches: use execFile with git commands in GIT_DIR
+  - Error handling should return stderr or error.message for helpful debugging
+  - All quality checks (typecheck, lint, test) pass after implementation
+---

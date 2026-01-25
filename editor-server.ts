@@ -234,6 +234,24 @@ app.post('/checkout', (req: Request, res: Response) => {
   });
 });
 
+// POST /branch/create endpoint
+app.post('/branch/create', (req: Request, res: Response) => {
+  const { name } = req.body;
+
+  if (!name || typeof name !== 'string') {
+    return res.status(400).json({ success: false, error: 'Branch name is required' });
+  }
+
+  execFile('git', ['checkout', '-b', name], { cwd: GIT_DIR }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing git checkout -b: ${error.message}`);
+      return res.status(500).json({ success: false, error: `Failed to create branch: ${stderr || error.message}` });
+    }
+
+    res.json({ success: true, branch: name });
+  });
+});
+
 // Start server
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);
