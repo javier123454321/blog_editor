@@ -1,0 +1,26 @@
+{
+  "name": "blog-editor",
+  "version": "1.0.0",
+  "description": "Visual markdown editor for 11ty blog with GitHub PR integration",
+  "main": "editor-server.js",
+  "scripts": {
+    "start": "node editor-server.js",
+    "dev": "nodemon editor-server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "nodemon": "^3.0.2",
+    "@types/node": "^20.10.6",
+    "@types/express": "^4.17.21"
+  }
+}
