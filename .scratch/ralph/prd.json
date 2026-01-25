@@ -318,7 +318,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 19,
-      "in-progress": false,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     },

@@ -2,6 +2,9 @@
   <div id="app" class="app">
     <LoginView v-if="!isAuthenticated" />
     <EditorLayout v-else>
+      <template #header-actions>
+        <BranchSelector @branch-changed="handleBranchChange" />
+      </template>
       <template #sidebar>
         <FileTree :files="files" @select="loadContent" />
       </template>
@@ -30,6 +33,7 @@ import { ref, onMounted } from 'vue';
 import { useAuth } from './composables/useAuth';
 import LoginView from './views/LoginView.vue';
 import EditorLayout from './layouts/EditorLayout.vue';
+import BranchSelector from './components/BranchSelector.vue';
 import FileTree from './components/FileTree.vue';
 import EditorPane from './components/EditorPane.vue';
 import MarkdownEditor from './components/MarkdownEditor.vue';
@@ -108,6 +112,14 @@ const saveFile = async () => {
   setTimeout(() => {
     saveMessage.value = null;
   }, 3000);
+};
+
+const handleBranchChange = () => {
+  // Refresh file tree when branch changes
+  loadFiles();
+  // Clear current file and content
+  currentFile.value = '';
+  content.value = '';
 };
 
 onMounted(() => {

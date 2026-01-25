@@ -5,7 +5,9 @@
       <div class="header-content">
         <h1 class="app-title">Blog Editor</h1>
         <div class="header-actions">
-          <!-- Placeholder for future actions -->
+          <slot name="header-actions">
+            <!-- Placeholder for future actions -->
+          </slot>
         </div>
       </div>
     </header>
