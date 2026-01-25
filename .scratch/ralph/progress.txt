@@ -150,3 +150,20 @@
   - git remote show origin can be parsed to find the default branch name
   - All quality checks (typecheck, lint, test) passed successfully
 ---
+## Jan 25 2026 - US-025
+- Implemented WysiwygEditor.vue component in editor/src/components/
+  - Custom contenteditable-based WYSIWYG editor with toolbar
+  - Supports bold, italic, headings (H1-H3), links, bullet lists, numbered lists
+  - Bidirectional conversion between markdown and HTML
+  - Keyboard shortcuts: Ctrl+B for bold, Ctrl+I for italic
+  - Receives content as modelValue prop, emits update:modelValue on change
+- Updated EditorPane.vue to add "Visual" tab alongside Edit and Preview
+- Updated App.vue to include WysiwygEditor component in the wysiwyg slot
+- Files changed: editor/src/components/WysiwygEditor.vue, editor/src/components/EditorPane.vue, editor/src/App.vue, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - For WYSIWYG editors, contenteditable with document.execCommand is a lightweight solution
+  - Markdown-HTML conversion requires bidirectional transformation functions
+  - Use watch() to sync external changes to modelValue prop with editor content
+  - Browser verification skipped due to system dependencies (consistent with US-020 and US-024)
+  - All standard quality checks (typecheck, build) passed successfully
+---
