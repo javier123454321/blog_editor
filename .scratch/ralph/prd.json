@@ -15,7 +15,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": "Implemented with Express server, CORS middleware configured for localhost:5173"
     },
@@ -31,7 +32,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": "Implemented POST /auth with SHA256 password hashing"
     },
@@ -47,7 +49,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": "Implemented middleware that checks X-Auth-Password header"
     },
@@ -63,7 +66,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": "Implemented with recursive directory traversal"
     },
@@ -80,7 +84,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": "Implemented with path validation and directory traversal prevention"
     },
@@ -97,7 +102,8 @@
          "Typecheck passes"
        ],
        "priority": 6,
-       "in-progress": false,
+       "in-progress": false
+,
        "passes": true,
        "notes": "Implemented with directory creation support, path validation, and proper error handling"
      },
@@ -114,7 +120,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": ""
     },
@@ -131,7 +138,8 @@
         "Verify in browser using playwright mcp"
       ],
       "priority": 8,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": "Implemented LoginView.vue with password input, useAuth composable for state management, and conditional rendering in App.vue"
     },
@@ -149,7 +157,8 @@
          "Verify in browser using playwright mcp"
        ],
        "priority": 9,
-       "in-progress": false,
+       "in-progress": false
+,
        "passes": true,
        "notes": "Implemented EditorLayout.vue component with responsive header and 250px sidebar, mobile collapsible design, integrated into App.vue"
      },
@@ -167,7 +176,8 @@
         "Verify in browser using playwright mcp"
       ],
       "priority": 10,
-      "in-progress": false,
+      "in-progress": false
+,
       "passes": true,
       "notes": ""
     },
@@ -184,8 +194,9 @@
         "Verify in browser using playwright mcp"
       ],
       "priority": 11,
-      "in-progress": false,
-      "passes": false,
+      "in-progress": false
+,
+      "passes": true,
       "notes": ""
     },
     {
@@ -201,14 +212,15 @@
          "Verify in browser using playwright mcp"
        ],
        "priority": 12,
-       "in-progress": false,
+       "in-progress": false
+,
        "passes": true,
        "notes": ""
      },
     {
-       "id": "US-013",
-       "title": "Add editor mode tabs and file loading",
-       "description": "As a user, I need to switch between edit and preview modes.",
-       "acceptanceCriteria": [
+      "id": "US-013",
+      "title": "Add editor mode tabs and file loading",
+      "description": "As a user, I need to switch between edit and preview modes.",
+      "acceptanceCriteria": ,"in-progress": true 
          "EditorPane.vue with tabs: 'Edit' and 'Preview'",
          "Clicking tab switches između=""," fileselected Governor": downstream projections]} wovenly இசை 

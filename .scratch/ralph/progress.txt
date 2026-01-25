@@ -1,4 +1,4 @@
-## Jan 25 2026 - US-011
+## Jan 25 2026 - US-011 Implement Create markdown renderer
 - Implemented MarkdownEditor.vue component for raw markdown editing.
 - Component receives content prop and emits "update" event.
 - Added basic styling with monospace fonts.
