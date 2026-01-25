@@ -136,23 +136,23 @@
       "notes": "Implemented LoginView.vue with password input, useAuth composable for state management, and conditional rendering in App.vue"
     },
     {
-      "id": "US-009",
-      "title": "Create main layout with header and sidebar",
-      "description": "As a user, I need a clear layout to navigate the editor.",
-      "acceptanceCriteria": [
-        "EditorLayout.vue with header bar and left sidebar",
-        "Header displays app title 'Blog Editor'",
-        "Sidebar is 250px wide on desktop",
-        "Main content area fills remaining space",
-        "Basic responsive: sidebar collapsible on mobile (< 768px)",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 9,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
+       "id": "US-009",
+       "title": "Create main layout with header and sidebar",
+       "description": "As a user, I need a clear layout to navigate the editor.",
+       "acceptanceCriteria": [
+         "EditorLayout.vue with header bar and left sidebar",
+         "Header displays app title 'Blog Editor'",
+         "Sidebar is 250px wide on desktop",
+         "Main content area fills remaining space",
+         "Basic responsive: sidebar collapsible on mobile (< 768px)",
+         "Typecheck passes",
+         "Verify in browser using dev-browser skill"
+       ],
+       "priority": 9,
+       "in-progress": false,
+       "passes": true,
+       "notes": "Implemented EditorLayout.vue component with responsive header and 250px sidebar, mobile collapsible design, integrated into App.vue"
+     },
     {
       "id": "US-010",
       "title": "Create FileTree component",

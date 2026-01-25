@@ -5,8 +5,10 @@ Started: Sun Jan 25 03:47:25 UTC 2026
 ## Codebase Patterns
 - Vue 3 composables pattern for state management (useAuth composable)
 - API requests from frontend include auth headers via composables
-- Component structure: views/ for full page components, composables/ for shared logic
+- Component structure: views/ for full page components, composables/ for shared logic, layouts/ for layout components
 - LocalStorage used for persisting authentication state
+- Responsive design patterns: mobile-first with flex layouts and viewport detection
+- Sidebar pattern: responsive sidebar with desktop width (250px) and mobile collapse toggle
 
 ## Sun Jan 25 03:51:00 UTC 2026 - US-006
 - Implemented POST /file/:path endpoint to save markdown file content
@@ -66,5 +68,28 @@ Started: Sun Jan 25 03:47:25 UTC 2026
   - localStorage is used alongside ref state for persistence across page reloads
   - LoginView styling uses gradient background and centered form layout for professional appearance
   - Future components should call getPassword() when making API requests that need X-Auth-Password header
+---
+
+## Sun Jan 25 04:01 - US-009
+- Implemented EditorLayout.vue component with header bar and responsive sidebar
+- Layout features:
+  - Header with app title 'Blog Editor' and space for header actions
+  - Left sidebar 250px wide on desktop with proper flex layout
+  - Main content area that fills remaining space
+  - Mobile responsive design with sidebar collapse (< 768px viewport)
+  - Sidebar toggle button for mobile devices
+- Updated App.vue to use EditorLayout component with slot-based content
+- Files created:
+  - editor/src/layouts/EditorLayout.vue (responsive layout component)
+- Files modified:
+  - editor/src/App.vue (integrated EditorLayout, reorganized styles)
+- **Learnings for future iterations:**
+  - Layout components use Vue slots for flexible content injection (sidebar vs main content)
+  - Responsive design uses computed() to track window width and breakpoints
+  - CSS Grid/Flexbox combined for responsive header/sidebar/main layout
+  - Mobile breakpoint convention: < 768px = mobile
+  - On mobile, use fixed positioning for sidebar with transform animations for smooth collapse
+  - Global App.vue styles (*, html, body) set baseline for full-height layouts
+  - Sidebar should auto-collapse on mobile, auto-expand on desktop resize
 ---
 
