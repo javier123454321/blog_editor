@@ -8,5 +8,5 @@
     "moduleResolution": "Node",
     "esModuleInterop": true
   },
-  "include": ["editor/src/**/*"]
+  "include": ["editor/src/**/*", "editor-server.ts"]
 }

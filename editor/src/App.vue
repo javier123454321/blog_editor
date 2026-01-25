@@ -4,6 +4,7 @@
     <EditorLayout v-else>
       <template #header-actions>
         <BranchSelector @branch-changed="handleBranchChange" />
+        <ProposeChanges />
       </template>
       <template #sidebar>
         <FileTree :files="files" @select="loadContent" />
@@ -34,6 +35,7 @@ import { useAuth } from './composables/useAuth';
 import LoginView from './views/LoginView.vue';
 import EditorLayout from './layouts/EditorLayout.vue';
 import BranchSelector from './components/BranchSelector.vue';
+import ProposeChanges from './components/ProposeChanges.vue';
 import FileTree from './components/FileTree.vue';
 import EditorPane from './components/EditorPane.vue';
 import MarkdownEditor from './components/MarkdownEditor.vue';

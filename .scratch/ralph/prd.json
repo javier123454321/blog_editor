@@ -406,7 +406,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 24,
-      "in-progress": false,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     },
