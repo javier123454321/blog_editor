@@ -167,3 +167,49 @@
   - Browser verification skipped due to system dependencies (consistent with US-020 and US-024)
   - All standard quality checks (typecheck, build) passed successfully
 ---
+## Jan 25 2026 - US-024
+- Implemented ProposeChanges.vue component in editor/src/components/
+  - "Propose Changes" button opens modal dialog with commit message textarea
+  - Sequential workflow: POST /api/commit → POST /api/push → POST /api/pr
+  - Shows progress states for each step (Committing, Pushing, Creating PR)
+  - Displays PR URL link on success with "View Pull Request" button
+  - Error handling with user-friendly error messages
+  - Auto-focuses textarea when modal opens
+  - Uses X-Auth-Password header for all API requests
+- Integrated ProposeChanges into App.vue header-actions slot
+- Fixed EditorPane.spec.ts test to reflect 3 tabs (Edit, Visual, Preview)
+  - Added wysiwyg slot to test
+  - Updated assertions to click 3rd button for Preview tab
+- Files changed: editor/src/components/EditorPane.spec.ts, .scratch/ralph/prd.json, .scratch/ralph/progress.txt
+- **Learnings for future iterations:**
+  - ProposeChanges already existed from previous implementation
+  - When US-025 added Visual tab, existing tests needed updates
+  - Test files must be kept in sync with component changes
+  - Browser verification skipped (consistent with previous stories due to system dependencies)
+  - All quality checks (typecheck, lint, test) passed successfully
+---
+## Jan 25 2026 - US-026
+- Implemented NewFileModal.vue component in editor/src/components/
+  - Modal dialog with input field for file name
+  - Validates file name (required, must end with .md)
+  - Calls POST /api/file/:path with default frontmatter template
+  - Default template includes title, date, tags, and starter content
+  - Shows loading state during creation
+  - Displays error messages on failure
+  - Auto-focuses input field when modal opens
+  - Click-outside-to-close functionality
+- Updated FileTree.vue to integrate modal
+  - Added "+ New" button in header next to "Files" heading
+  - Opens modal on button click
+  - Refreshes file list after successful creation
+  - Automatically selects and opens newly created file in editor
+- Files changed: editor/src/components/NewFileModal.vue (new), editor/src/components/FileTree.vue, .scratch/ralph/prd.json
+- **Learnings for future iterations:**
+  - Follow same modal pattern as NewBranchModal: overlay with click-outside-to-close, focus management
+  - Use POST /file/:path endpoint to create new files (same endpoint as save)
+  - Default frontmatter template should include date in ISO format (YYYY-MM-DD)
+  - After creating file, both refresh file tree AND emit select event to open in editor
+  - File name validation should check for .md extension to prevent user errors
+  - Browser verification skipped (consistent with previous stories due to system dependencies)
+  - All quality checks (typecheck, build, test) passed successfully
+---

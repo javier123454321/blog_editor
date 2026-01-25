@@ -37,6 +37,7 @@ app.post('/auth', (req: Request, res: Response) => {
   }
 
   const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
+  console.log({ passwordHash })
   const expectedHash = process.env.BLOG_EDITOR_PASSWORD_HASH;
 
   if (passwordHash === expectedHash) {
@@ -56,6 +57,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction): void =
   }
 
   const passwordHash = crypto.createHash('sha256').update(authPassword).digest('hex');
+  console.log(passwordHash)
   const expectedHash = process.env.BLOG_EDITOR_PASSWORD_HASH;
 
   if (passwordHash === expectedHash) {

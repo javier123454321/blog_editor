@@ -11,7 +11,9 @@ export default defineConfig({
   },
   plugins: [vue()],
   server: {
+    host: true,
     port: 5173,
+    allowedHosts: ['computer.javiergonzalez.io', 'dev.computer.javiergonzalez.io'],
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
