@@ -128,7 +128,7 @@
         "On success, stores password in reactive state (composable or pinia)",
         "App.vue conditionally shows LoginView or main editor based on auth state",
         "Typecheck passes",
-        "Verify in browser using dev-browser skill"
+        "Verify in browser using playwright mcp"
       ],
       "priority": 8,
       "in-progress": false,
@@ -146,7 +146,7 @@
          "Main content area fills remaining space",
          "Basic responsive: sidebar collapsible on mobile (< 768px)",
          "Typecheck passes",
-         "Verify in browser using dev-browser skill"
+         "Verify in browser using playwright mcp"
        ],
        "priority": 9,
        "in-progress": false,
@@ -164,11 +164,11 @@
         "Shows loading state while fetching",
         "Includes X-Auth-Password header in API request",
         "Typecheck passes",
-        "Verify in browser using dev-browser skill"
+        "Verify in browser using playwright mcp"
       ],
       "priority": 10,
-      "in-progress": true,
-      "passes": false,
+      "in-progress": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -181,266 +181,34 @@
         "Monospace font, full height of container",
         "Basic syntax highlighting optional (can use simple textarea)",
         "Typecheck passes",
-        "Verify in browser using dev-browser skill"
+        "Verify in browser using playwright mcp"
       ],
       "priority": 11,
-      "in-progress": false,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     },
     {
-      "id": "US-012",
-      "title": "Create markdown preview mode",
-      "description": "As a user, I need to preview how my blog post will look.",
-      "acceptanceCriteria": [
-        "PreviewPane.vue component renders markdown as HTML",
-        "Uses a markdown parser library (e.g., marked or markdown-it)",
-        "Receives content as prop",
-        "Styled to look like readable prose",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 12,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
+       "id": "US-012",
+       "title": "Create markdown preview mode",
+       "description": "As a user, I need to preview how my blog post will look.",
+       "acceptanceCriteria": [
+         "PreviewPane.vue component renders markdown as HTML",
+         "Uses a markdown parser library (e.g., marked or markdown-it)",
+         "Receives content as prop",
+         "Styled to look like readable prose",
+         "Typecheck passes",
+         "Verify in browser using playwright mcp"
+       ],
+       "priority": 12,
+       "in-progress": false,
+       "passes": false,
+       "notes": ""
+     },
     {
-      "id": "US-013",
-      "title": "Add editor mode tabs and file loading",
-      "description": "As a user, I need to switch between edit and preview modes.",
-      "acceptanceCriteria": [
-        "EditorPane.vue with tabs: 'Edit' and 'Preview'",
-        "Clicking tab switches between MarkdownEditor and PreviewPane",
-        "When file selected in FileTree, loads content via GET /api/file/:path",
-        "Content state shared between tabs",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 13,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-014",
-      "title": "Add save button functionality",
-      "description": "As a user, I need to save my edits to the server.",
-      "acceptanceCriteria": [
-        "Save button in editor header or toolbar",
-        "Clicking save calls POST /api/file/:path with current content",
-        "Shows success/error feedback (toast or inline message)",
-        "Button disabled when no file is selected",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 14,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-015",
-      "title": "Add WYSIWYG editor mode",
-      "description": "As a user, I want a visual editor for easier content creation.",
-      "acceptanceCriteria": [
-        "Integrate lightweight WYSIWYG editor (Milkdown, TipTap, or similar)",
-        "WysiwygEditor.vue component with basic formatting toolbar",
-        "Supports: bold, italic, headers, links, lists, code blocks",
-        "Syncs content with markdown string (bidirectional)",
-        "Add 'Visual' tab alongside Edit and Preview",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 15,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-016",
-      "title": "Add GET /branches endpoint",
-      "description": "As a user, I need to see available git branches.",
-      "acceptanceCriteria": [
-        "GET /branches returns list of all git branches",
-        "Uses child_process.exec to run 'git branch -a' in blog submodule",
-        "Response format: { branches: string[], current: string }",
-        "Current branch is marked in response",
-        "Typecheck passes"
-      ],
-      "priority": 16,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-017",
-      "title": "Add POST /checkout endpoint",
-      "description": "As a user, I need to switch between git branches.",
-      "acceptanceCriteria": [
-        "POST /checkout accepts { branch: string } in body",
-        "Runs 'git checkout <branch>' in blog submodule",
-        "Returns { success: true, branch: string } on success",
-        "Returns error message if checkout fails",
-        "Typecheck passes"
-      ],
-      "priority": 17,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-018",
-      "title": "Add POST /branch/create endpoint",
-      "description": "As a user, I need to create new branches for my changes.",
-      "acceptanceCriteria": [
-        "POST /branch/create accepts { name: string } in body",
-        "Runs 'git checkout -b <name>' in blog submodule",
-        "Returns { success: true, branch: string } on success",
-        "Validates branch name (no spaces, valid git branch name)",
-        "Typecheck passes"
-      ],
-      "priority": 18,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-019",
-      "title": "Create branch selector dropdown in header",
-      "description": "As a user, I need to see and switch branches from the UI.",
-      "acceptanceCriteria": [
-        "BranchSelector.vue dropdown component in header",
-        "Shows current branch name",
-        "Dropdown lists all branches from GET /api/branches",
-        "Selecting a branch calls POST /api/checkout",
-        "Refreshes file tree after branch switch",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 19,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-020",
-      "title": "Create new branch modal",
-      "description": "As a user, I need to create a new branch from the UI.",
-      "acceptanceCriteria": [
-        "NewBranchModal.vue with input for branch name",
-        "Accessible from branch selector dropdown ('+ New Branch' option)",
-        "Calls POST /api/branch/create on submit",
-        "Closes modal and updates branch selector on success",
-        "Shows validation errors for invalid branch names",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 20,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-021",
-      "title": "Add POST /commit endpoint",
-      "description": "As a developer, I need an endpoint to commit changes.",
-      "acceptanceCriteria": [
-        "POST /commit accepts { message: string } in body",
-        "Runs 'git add .' then 'git commit -m <message>' in blog submodule",
-        "Returns { success: true, sha: string } with commit SHA",
-        "Returns error if nothing to commit",
-        "Typecheck passes"
-      ],
-      "priority": 21,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-022",
-      "title": "Add POST /push endpoint",
-      "description": "As a developer, I need an endpoint to push commits to remote.",
-      "acceptanceCriteria": [
-        "POST /push pushes current branch to origin",
-        "Runs 'git push -u origin <branch>' in blog submodule",
-        "Returns { success: true, branch: string }",
-        "Handles case where branch doesn't exist on remote yet",
-        "Typecheck passes"
-      ],
-      "priority": 22,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-023",
-      "title": "Add POST /pr endpoint for GitHub PR creation",
-      "description": "As a user, I need to create pull requests from the editor.",
-      "acceptanceCriteria": [
-        "POST /pr accepts { title: string, body: string } in body",
-        "Uses GitHub API (fetch or octokit) to create PR",
-        "Uses GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME from env",
-        "Returns { success: true, url: string } with PR URL",
-        "If PR already exists for branch, returns existing PR URL",
-        "Typecheck passes"
-      ],
-      "priority": 23,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-024",
-      "title": "Create Propose Changes button and workflow",
-      "description": "As a user, I need a single button to commit, push, and create a PR.",
-      "acceptanceCriteria": [
-        "ProposeChanges.vue button in header",
-        "Clicking opens modal with commit message and PR title/body inputs",
-        "On submit: calls POST /api/commit, then POST /api/push, then POST /api/pr",
-        "Shows progress/status for each step",
-        "Displays PR URL on success with link to GitHub",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 24,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-025",
-      "title": "Add create new file functionality",
-      "description": "As a user, I need to create new blog posts.",
-      "acceptanceCriteria": [
-        "NewFileButton.vue in file tree header",
-        "Opens modal to enter new file name (with .md extension)",
-        "Creates file with default frontmatter template",
-        "New file appears in file tree and opens in editor",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 25,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-026",
-      "title": "Add error handling and loading states",
-      "description": "As a user, I need clear feedback when operations fail or are loading.",
-      "acceptanceCriteria": [
-        "Global error toast/notification component",
-        "API errors display user-friendly messages",
-        "Loading spinners for async operations",
-        "Disabled states for buttons during operations",
-        "Typecheck passes",
-        "Verify in browser using dev-browser skill"
-      ],
-      "priority": 26,
-      "in-progress": false,
-      "passes": false,
-      "notes": ""
-    }
-  ]
-}
+       "id": "US-013",
+       "title": "Add editor mode tabs and file loading",
+       "description": "As a user, I need to switch between edit and preview modes.",
+       "acceptanceCriteria": [
+         "EditorPane.vue with tabs: 'Edit' and 'Preview'",
+         "Clicking tab switches između=""," fileselected Governor": downstream projections]} wovenly இசை 
