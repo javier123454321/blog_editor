@@ -184,7 +184,7 @@
         "Verify in browser using playwright mcp"
       ],
       "priority": 11,
-      "in-progress": true,
+      "in-progress": false,
       "passes": false,
       "notes": ""
     },
@@ -202,7 +202,7 @@
        ],
        "priority": 12,
        "in-progress": false,
-       "passes": false,
+       "passes": true,
        "notes": ""
      },
     {

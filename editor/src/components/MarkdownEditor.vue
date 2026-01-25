@@ -1,13 +1,19 @@
 <template>
-  <textarea
-    class="markdown-editor"
-    :value="content"
-    @input="$emit('update', $event.target.value)"
-  ></textarea>
+  <div class="markdown-editor-container">
+    <textarea
+      ref="textarea"
+      class="markdown-editor"
+      :value="content"
+      @input="handleInput"
+    ></textarea>
+    <pre v-html="highlightedContent" class="markdown-highlight"></pre>
+  </div>
+
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
+import hljs from 'highlight.js';
 
 export default defineComponent({
   name: 'MarkdownEditor',
@@ -16,6 +22,28 @@ export default defineComponent({
       type: String,
       required: true,
     },
+  },
+  setup(props, { emit }) {
+    const content = ref(props.content);
+    const highlightedContent = ref('');
+
+    const highlightContent = () => {
+      highlightedContent.value = hljs.highlightAuto(content.value).value;
+    };
+
+    const handleInput = (event: Event) => {
+      const value = (event.target as HTMLTextAreaElement).value;
+      content.value = value;
+      emit('update', value);
+    };
+
+    watch(() => content.value, highlightContent, { immediate: true });
+
+    return {
+      content,
+      highlightedContent,
+      handleInput,
+    };
   },
 });
 </script>
@@ -31,4 +59,25 @@ export default defineComponent({
   border-radius: 4px;
   resize: none;
 }
+
+.markdown-editor-container {
+  position: relative;
+  display: flex;
+}
+
+.markdown-editor {
+  position: absolute;
+  background: transparent;
+  z-index: 1;
+  color: transparent;
+  caret-color: black;
+}
+
+.markdown-highlight {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+  font-size: 14px;
+}
+
 </style>

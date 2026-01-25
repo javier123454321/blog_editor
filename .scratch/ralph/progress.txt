@@ -1,11 +1,8 @@
-## Sun Jan 25 05:01 - US-007
-- Completed initialization of Vue 3 + TypeScript frontend project
-- Verified strict mode, Vite config proxy, and placeholder template in App.vue
-- Fixed workspace issue in root package.json by introducing 'workspaces' configuration
-- Confirmed Vite dev server runs successfully on localhost:5173
-- Files updated:
-  - editor/src/App.vue
-  - package.json (root for workspaces)
+## Jan 25 2026 - US-011
+- Implemented MarkdownEditor.vue component for raw markdown editing.
+- Component receives content prop and emits "update" event.
+- Added basic styling with monospace fonts.
 - **Learnings for future iterations:**
-  - Ensure npm workspaces include subdirectories correctly to avoid dev server errors
-  - Proxy configuration simplifies frontend-backend connection during development
+  - Ensure Vite and Vitest plugin versions are aligned.
+  - Standardize TypeScript module and resolution options.
+---
