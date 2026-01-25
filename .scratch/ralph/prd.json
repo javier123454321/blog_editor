@@ -406,9 +406,9 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 24,
-      "in-progress": true,
-      "passes": false,
-      "notes": ""
+      "in-progress": false,
+      "passes": true,
+      "notes": "ProposeChanges component created with dialog, sequential API calls (commit/push/pr), progress states, PR URL display. Updated EditorPane test to reflect 3 tabs (Edit/Visual/Preview)."
     },
     {
       "id": "US-025",
@@ -441,7 +441,7 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 26,
-      "in-progress": false,
+      "in-progress": true,
       "passes": false,
       "notes": ""
     }

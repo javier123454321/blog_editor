@@ -2,6 +2,9 @@
   <div class="file-tree">
     <div class="file-tree-header">
       <h2>Files</h2>
+      <button @click="openNewFileModal" class="new-file-button" title="Create new file">
+        + New
+      </button>
     </div>
 
     <div v-if="loading" class="loading-state">
@@ -29,12 +32,19 @@
         </button>
       </li>
     </ul>
+
+    <NewFileModal
+      :is-open="isNewFileModalOpen"
+      @close="closeNewFileModal"
+      @created="handleFileCreated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useAuth } from '../composables/useAuth';
+import NewFileModal from './NewFileModal.vue';
 
 interface FileInfo {
   path: string;
@@ -44,6 +54,7 @@ interface FileInfo {
 const files = ref<FileInfo[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
+const isNewFileModalOpen = ref(false);
 const { getPassword } = useAuth();
 
 const emit = defineEmits<{
@@ -85,6 +96,21 @@ const selectFile = (path: string) => {
   emit('select', path);
 };
 
+const openNewFileModal = () => {
+  isNewFileModalOpen.value = true;
+};
+
+const closeNewFileModal = () => {
+  isNewFileModalOpen.value = false;
+};
+
+const handleFileCreated = async (path: string) => {
+  // Refresh file tree
+  await fetchFiles();
+  // Emit select event to open the new file in editor
+  emit('select', path);
+};
+
 onMounted(() => {
   fetchFiles();
 });
@@ -101,6 +127,9 @@ onMounted(() => {
   padding: 0.75rem 0;
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .file-tree-header h2 {
@@ -108,6 +137,22 @@ onMounted(() => {
   font-size: 0.95rem;
   font-weight: 600;
   color: #333;
+}
+
+.new-file-button {
+  padding: 0.4rem 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.new-file-button:hover {
+  background-color: #0056b3;
 }
 
 .loading-state,
