@@ -17,6 +17,9 @@
           <template #edit>
             <MarkdownEditor :model-value="content" @update:model-value="updateContent" />
           </template>
+          <template #wysiwyg>
+            <WysiwygEditor :model-value="content" @update:model-value="updateContent" />
+          </template>
           <template #preview>
             <PreviewPane :content="content" />
           </template>
@@ -40,6 +43,7 @@ import FileTree from './components/FileTree.vue';
 import EditorPane from './components/EditorPane.vue';
 import MarkdownEditor from './components/MarkdownEditor.vue';
 import PreviewPane from './components/PreviewPane.vue';
+import WysiwygEditor from './components/WysiwygEditor.vue';
 
 const { isAuthenticated, password } = useAuth();
 const files = ref<{ path: string; name: string }[]>([]);

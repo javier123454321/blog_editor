@@ -7,6 +7,10 @@
           @click="switchTab('edit')"
         >Edit</button>
         <button 
+          :class="{ active: activeTab === 'wysiwyg' }"
+          @click="switchTab('wysiwyg')"
+        >Visual</button>
+        <button 
           :class="{ active: activeTab === 'preview' }"
           @click="switchTab('preview')"
         >Preview</button>
@@ -15,6 +19,9 @@
     </div>
     <div v-if="activeTab === 'edit'">
       <slot name="edit" />
+    </div>
+    <div v-if="activeTab === 'wysiwyg'">
+      <slot name="wysiwyg" />
     </div>
     <div v-if="activeTab === 'preview'">
       <slot name="preview" />
