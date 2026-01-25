@@ -115,7 +115,7 @@
       ],
       "priority": 7,
       "in-progress": false,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
