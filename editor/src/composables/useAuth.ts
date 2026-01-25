@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 
 // Reactive auth state
-const password = ref<string | null>(localStorage.getItem('blog_editor_password'));
+const password = ref<string | null>((globalThis as unknown as Window & typeof globalThis).localStorage.getItem('blog_editor_password'));
 
 /**
  * Composable for managing authentication state
@@ -22,7 +22,12 @@ export function useAuth() {
         body: JSON.stringify({ password: inputPassword }),
       });
 
-      const data = await response.json();
+      interface AuthResponse {
+  success: boolean;
+  error?: string;
+}
+
+const data = await response.json() as AuthResponse;
 
       if (data.success) {
         // Store password in both state and localStorage
