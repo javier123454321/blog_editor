@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
@@ -34,6 +34,34 @@ app.post('/auth', (req: Request, res: Response) => {
     return res.json({ success: true });
   } else {
     return res.status(401).json({ success: false, error: 'Invalid password' });
+  }
+});
+
+// Auth middleware for protected routes
+const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+  const authPassword = req.headers['x-auth-password'] as string;
+
+  if (!authPassword) {
+    res.status(401).json({ success: false, error: 'Authorization header missing' });
+    return;
+  }
+
+  const passwordHash = crypto.createHash('sha256').update(authPassword).digest('hex');
+  const expectedHash = process.env.BLOG_EDITOR_PASSWORD_HASH;
+
+  if (passwordHash === expectedHash) {
+    next();
+  } else {
+    res.status(401).json({ success: false, error: 'Unauthorized' });
+  }
+};
+
+// Apply auth middleware to all routes except / and /auth
+app.use((req: Request, res: Response, next: NextFunction) => {
+  if (req.path === '/' || (req.path === '/auth' && req.method === 'POST')) {
+    next();
+  } else {
+    authMiddleware(req, res, next);
   }
 });
 
