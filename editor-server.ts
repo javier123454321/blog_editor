@@ -216,6 +216,24 @@ app.get('/branches', (req: Request, res: Response) => {
   });
 });
 
+// POST /checkout endpoint
+app.post('/checkout', (req: Request, res: Response) => {
+  const { branch } = req.body;
+
+  if (!branch || typeof branch !== 'string') {
+    return res.status(400).json({ success: false, error: 'Branch name is required' });
+  }
+
+  execFile('git', ['checkout', branch], { cwd: GIT_DIR }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing git checkout: ${error.message}`);
+      return res.status(500).json({ success: false, error: `Failed to checkout branch: ${stderr || error.message}` });
+    }
+
+    res.json({ success: true, branch });
+  });
+});
+
 // Start server
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);
