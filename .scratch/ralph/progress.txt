@@ -1,8 +1,7 @@
-## Jan 25 2026 - US-011 Implement Create markdown renderer
-- Implemented MarkdownEditor.vue component for raw markdown editing.
-- Component receives content prop and emits "update" event.
-- Added basic styling with monospace fonts.
+## Jan 25 2026 - US-013
+- Added EditorPane.vue component for switching between Edit and Preview modes.
+- Created associated tests in EditorPane.spec.ts to ensure functionality.
 - **Learnings for future iterations:**
-  - Ensure Vite and Vitest plugin versions are aligned.
-  - Standardize TypeScript module and resolution options.
+  - Introduced tabbed navigation with scoped styles.
+  - Explored Vue component communication using slots.
 ---

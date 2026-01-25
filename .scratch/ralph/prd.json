@@ -15,8 +15,7 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
       "notes": "Implemented with Express server, CORS middleware configured for localhost:5173"
     },
@@ -32,8 +31,7 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
       "notes": "Implemented POST /auth with SHA256 password hashing"
     },
@@ -49,8 +47,7 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
       "notes": "Implemented middleware that checks X-Auth-Password header"
     },
@@ -66,8 +63,7 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
       "notes": "Implemented with recursive directory traversal"
     },
@@ -84,29 +80,27 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
       "notes": "Implemented with path validation and directory traversal prevention"
     },
     {
-       "id": "US-006",
-       "title": "Add POST /file/:path endpoint to save file content",
-       "description": "As a user, I need to save my edits to a blog post.",
-       "acceptanceCriteria": [
-         "POST /file/:path saves content from request body to the file",
-         "Request body format: { content: string }",
-         "Creates new file if it doesn't exist",
-         "Returns { success: true, path: string }",
-         "Path validation prevents directory traversal (no .. allowed)",
-         "Typecheck passes"
-       ],
-       "priority": 6,
-       "in-progress": false
-,
-       "passes": true,
-       "notes": "Implemented with directory creation support, path validation, and proper error handling"
-     },
+      "id": "US-006",
+      "title": "Add POST /file/:path endpoint to save file content",
+      "description": "As a user, I need to save my edits to a blog post.",
+      "acceptanceCriteria": [
+        "POST /file/:path saves content from request body to the file",
+        "Request body format: { content: string }",
+        "Creates new file if it doesn't exist",
+        "Returns { success: true, path: string }",
+        "Path validation prevents directory traversal (no .. allowed)",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented with directory creation support, path validation, and proper error handling"
+    },
     {
       "id": "US-007",
       "title": "Initialize Vue 3 + TypeScript frontend project",
@@ -120,10 +114,9 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
-      "notes": ""
+      "notes": "Configured with Vite, TypeScript strict mode, and API proxy"
     },
     {
       "id": "US-008",
@@ -135,33 +128,31 @@
         "On success, stores password in reactive state (composable or pinia)",
         "App.vue conditionally shows LoginView or main editor based on auth state",
         "Typecheck passes",
-        "Verify in browser using playwright mcp"
+        "Verify in browser using dev-browser skill"
       ],
       "priority": 8,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
       "notes": "Implemented LoginView.vue with password input, useAuth composable for state management, and conditional rendering in App.vue"
     },
     {
-       "id": "US-009",
-       "title": "Create main layout with header and sidebar",
-       "description": "As a user, I need a clear layout to navigate the editor.",
-       "acceptanceCriteria": [
-         "EditorLayout.vue with header bar and left sidebar",
-         "Header displays app title 'Blog Editor'",
-         "Sidebar is 250px wide on desktop",
-         "Main content area fills remaining space",
-         "Basic responsive: sidebar collapsible on mobile (< 768px)",
-         "Typecheck passes",
-         "Verify in browser using playwright mcp"
-       ],
-       "priority": 9,
-       "in-progress": false
-,
-       "passes": true,
-       "notes": "Implemented EditorLayout.vue component with responsive header and 250px sidebar, mobile collapsible design, integrated into App.vue"
-     },
+      "id": "US-009",
+      "title": "Create main layout with header and sidebar",
+      "description": "As a user, I need a clear layout to navigate the editor.",
+      "acceptanceCriteria": [
+        "EditorLayout.vue with header bar and left sidebar",
+        "Header displays app title 'Blog Editor'",
+        "Sidebar is 250px wide on desktop",
+        "Main content area fills remaining space",
+        "Basic responsive: sidebar collapsible on mobile (< 768px)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented EditorLayout.vue component with responsive header and 250px sidebar, mobile collapsible design"
+    },
     {
       "id": "US-010",
       "title": "Create FileTree component",
@@ -173,13 +164,12 @@
         "Shows loading state while fetching",
         "Includes X-Auth-Password header in API request",
         "Typecheck passes",
-        "Verify in browser using playwright mcp"
+        "Verify in browser using dev-browser skill"
       ],
       "priority": 10,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
-      "notes": ""
+      "notes": "FileTree component with loading state and auth header"
     },
     {
       "id": "US-011",
@@ -191,36 +181,223 @@
         "Monospace font, full height of container",
         "Basic syntax highlighting optional (can use simple textarea)",
         "Typecheck passes",
-        "Verify in browser using playwright mcp"
+        "Verify in browser using dev-browser skill"
       ],
       "priority": 11,
-      "in-progress": false
-,
+      "in-progress": false,
       "passes": true,
+      "notes": "Basic markdown textarea editor with monospace font"
+    },
+    {
+      "id": "US-012",
+      "title": "Create markdown preview mode",
+      "description": "As a user, I need to preview how my blog post will look.",
+      "acceptanceCriteria": [
+        "PreviewPane.vue component renders markdown as HTML",
+        "Uses a markdown parser library (e.g., marked or markdown-it)",
+        "Receives content as prop",
+        "Styled to look like readable prose",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "in-progress": false,
+      "passes": true,
+      "notes": "PreviewPane with markdown parsing"
+    },
+    {
+      "id": "US-013",
+      "title": "Create EditorPane with tabs for Edit and Preview modes",
+      "description": "As a user, I need to switch between editing and preview modes.",
+      "acceptanceCriteria": [
+        "EditorPane.vue component with 'Edit' and 'Preview' tabs",
+        "Clicking tab switches between MarkdownEditor and PreviewPane",
+        "Current tab state persists during session",
+        "Typecheck passes",
+        "Tests pass",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 13,
+      "in-progress": false,
+      "passes": true,
+      "notes": "TabNavigator with Edit/Preview modes"
+    },
+{
+            "id": "US-014",
+             "title": "Wire up file selection and content loading",
+         "in-progress": true,
+      "passes": false,
       "notes": ""
     },
     {
-       "id": "US-012",
-       "title": "Create markdown preview mode",
-       "description": "As a user, I need to preview how my blog post will look.",
-       "acceptanceCriteria": [
-         "PreviewPane.vue component renders markdown as HTML",
-         "Uses a markdown parser library (e.g., marked or markdown-it)",
-         "Receives content as prop",
-         "Styled to look like readable prose",
-         "Typecheck passes",
-         "Verify in browser using playwright mcp"
-       ],
-       "priority": 12,
-       "in-progress": false
-,
-       "passes": true,
-       "notes": ""
-     },
+      "id": "US-016",
+      "title": "Add GET /branches endpoint",
+      "description": "As a developer, I need an API to list available git branches.",
+      "acceptanceCriteria": [
+        "GET /branches returns array of branch names",
+        "Response format: { branches: [{ name: string, current: boolean }] }",
+        "Current branch is marked with current: true",
+        "Executes git branch command in blog subdirectory",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
     {
-      "id": "US-013",
-      "title": "Add editor mode tabs and file loading",
-      "description": "As a user, I need to switch between edit and preview modes.",
-      "acceptanceCriteria": ,"in-progress": true 
-         "EditorPane.vue with tabs: 'Edit' and 'Preview'",
-         "Clicking tab switches između=""," fileselected Governor": downstream projections]} wovenly இசை 
+      "id": "US-017",
+      "title": "Add POST /checkout endpoint",
+      "description": "As a user, I need to switch between git branches.",
+      "acceptanceCriteria": [
+        "POST /checkout accepts { branch: string } in request body",
+        "Executes git checkout in blog subdirectory",
+        "Returns { success: true, branch: string } on success",
+        "Returns error message if checkout fails",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Add POST /branch/create endpoint",
+      "description": "As a user, I need to create and checkout a new branch.",
+      "acceptanceCriteria": [
+        "POST /branch/create accepts { branchName: string } in request body",
+        "Executes git checkout -b in blog subdirectory",
+        "Returns { success: true, branch: string } on success",
+        "Returns error message if branch creation fails",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Create branch selector in header",
+      "description": "As a user, I need to see and switch branches from the UI.",
+      "acceptanceCriteria": [
+        "Header displays current branch name",
+        "Dropdown menu shows all available branches",
+        "Clicking branch calls POST /api/checkout",
+        "Shows loading state while switching",
+        "Displays error message if checkout fails",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 19,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-020",
+      "title": "Create new branch modal",
+      "description": "As a user, I need to create new branches from the UI.",
+      "acceptanceCriteria": [
+        "Header has 'New Branch' button",
+        "Clicking button opens modal with text input",
+        "Input has placeholder text 'Enter branch name'",
+        "Submit button calls POST /api/branch/create",
+        "Modal closes and branch selector updates on success",
+        "Shows error message if creation fails",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 20,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Add POST /commit endpoint",
+      "description": "As a developer, I need to commit changes to git.",
+      "acceptanceCriteria": [
+        "POST /commit accepts { message: string } in request body",
+        "Executes git add -A and git commit -m in blog subdirectory",
+        "Returns { success: true, commit: string } with commit hash",
+        "Returns error if no changes to commit",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-022",
+      "title": "Add POST /push endpoint",
+      "description": "As a developer, I need to push commits to remote.",
+      "acceptanceCriteria": [
+        "POST /push executes git push origin in blog subdirectory",
+        "Returns { success: true } on successful push",
+        "Returns error message if push fails",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-023",
+      "title": "Add POST /pr endpoint for GitHub PR creation",
+      "description": "As a developer, I need to create pull requests via the API.",
+      "acceptanceCriteria": [
+        "POST /pr accepts { title: string, body: string } in request body",
+        "Uses GITHUB_TOKEN environment variable for authentication",
+        "Creates PR via GitHub API pointing to main branch",
+        "Returns { success: true, prUrl: string } with PR URL",
+        "Returns error message if PR creation fails",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Create commit message input dialog",
+      "description": "As a user, I need to enter a commit message before proposing changes.",
+      "acceptanceCriteria": [
+        "Modal with textarea for commit message",
+        "Modal with optional title field for PR title",
+        "Modal with optional body field for PR description",
+        "Submit button triggers commit workflow",
+        "Cancel button closes modal without changes",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 24,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-025",
+      "title": "Create 'Propose Changes' button and workflow",
+      "description": "As a user, I need a button to propose my changes as a PR.",
+      "acceptanceCriteria": [
+        "EditorPane header has 'Propose Changes' button",
+        "Clicking button opens commit message dialog",
+        "After entering message, workflow: commit → push → create PR",
+        "Shows progress messages during workflow",
+        "Displays PR URL on successful creation",
+        "Displays error message if any step fails",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 25,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
