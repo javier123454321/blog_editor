@@ -4,12 +4,18 @@ import dotenv from 'dotenv';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { exec, execFile } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
 const app: Express = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3100;
 const BLOG_DIR = path.join(__dirname, 'blog', 'src', 'blog');
+const GIT_DIR = path.join(__dirname, 'blog');
 
 // Middleware
 app.use(cors({
@@ -186,9 +192,33 @@ app.post('/file/:path', (req: Request, res: Response) => {
    }
 });
 
+// GET /branches endpoint
+app.get('/branches', (req: Request, res: Response) => {
+  execFile('git', ['branch'], { cwd: GIT_DIR }, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing git branch: ${error.message}`);
+      return res.status(500).json({ success: false, error: 'Failed to list branches' });
+    }
+
+    if (stderr) {
+      console.error(`git branch stderr: ${stderr}`);
+    }
+
+    const branches = stdout.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        const isCurrent = line.startsWith('*');
+        const name = line.replace('*', '').trim();
+        return { name, current: isCurrent };
+      });
+
+    res.json({ branches });
+  });
+});
+
 // Start server
-app.listen(PORT, () => {
+app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-export default app;
+export { app };

@@ -1,7 +1,36 @@
-## Jan 25 2026 - US-013
-- Added EditorPane.vue component for switching between Edit and Preview modes.
-- Created associated tests in EditorPane.spec.ts to ensure functionality.
+## Jan 25 2026 - US-014
+- Moved `EditorPane.vue` and its spec from `editor/components` to `editor/src/components` to align with the standard Vue project structure.
+- Implemented `PreviewPane.vue` using the `marked` library to render Markdown to HTML.
+- Wired App Logic (`App.vue`):
+    - Added logic to fetch the file tree and file content from the Express API.
+    - Integrated `useAuth` to inject the `X-Auth-Password` header into these requests.
+    - Connected the `FileTree` selection event to load content into the `MarkdownEditor`.
+- Refactored `MarkdownEditor.vue` to use standard Vue `v-model` (`modelValue` prop) instead of a custom `content` prop.
+- Verified flows using `dev-browser` skill (file selection, content loading, tab switching).
+---
+## Jan 25 2026 - US-016
+- Added GET /branches endpoint that runs git branch in the blog repository.
+- Parses branch output into { name, current } response objects.
+- Files changed: editor-server.ts
 - **Learnings for future iterations:**
-  - Introduced tabbed navigation with scoped styles.
-  - Explored Vue component communication using slots.
+  - Use child_process execFile for git commands and run them in the blog root directory.
+---
+## Jan 25 2026 - US-015
+- Added Save button to EditorPane.vue toolbar
+  - Button emits 'save' event to parent component
+  - Styled with blue background and proper hover state
+  - Positioned in toolbar alongside Edit/Preview tabs
+- Implemented saveFile() handler in App.vue
+  - Calls POST /api/file/:path with current content
+  - Includes X-Auth-Password header for authentication
+  - Shows success message (green) or error message (red) for 3 seconds
+- Fixed editor-server.ts ES module issues
+  - Added __dirname polyfill using fileURLToPath(import.meta.url)
+  - Fixed cors, dotenv, crypto, fs, path imports to use default exports instead of namespace imports
+- Files changed: editor/src/components/EditorPane.vue, editor/src/App.vue, editor-server.ts
+- **Learnings for future iterations:**
+  - When using ES modules in TypeScript, use `import { fileURLToPath } from 'url'` and create __dirname manually
+  - Import libraries like cors, dotenv, crypto as default exports in ES modules: `import cors from 'cors'` not `import * as cors from 'cors'`
+  - POST /file/:path endpoint already exists and works correctly with auth
+  - User feedback messages should auto-dismiss after a few seconds
 ---

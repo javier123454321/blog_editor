@@ -1,14 +1,17 @@
 <template>
   <div>
-    <div class="tabs">
-      <button 
-        :class="{ active: activeTab === 'edit' }"
-        @click="switchTab('edit')"
-      >Edit</button>
-      <button 
-        :class="{ active: activeTab === 'preview' }"
-        @click="switchTab('preview')"
-      >Preview</button>
+    <div class="toolbar">
+      <div class="tabs">
+        <button 
+          :class="{ active: activeTab === 'edit' }"
+          @click="switchTab('edit')"
+        >Edit</button>
+        <button 
+          :class="{ active: activeTab === 'preview' }"
+          @click="switchTab('preview')"
+        >Preview</button>
+      </div>
+      <button class="save-button" @click="$emit('save')">Save</button>
     </div>
     <div v-if="activeTab === 'edit'">
       <slot name="edit" />
@@ -22,6 +25,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+defineEmits(['save']);
+
 const activeTab = ref('edit');
 
 function switchTab(tab: string) {
@@ -30,9 +35,17 @@ function switchTab(tab: string) {
 </script>
 
 <style scoped>
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
 .tabs {
   display: flex;
-  margin-bottom: 1rem;
 }
 
 button {
@@ -45,5 +58,16 @@ button {
 button.active {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.save-button {
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
 }
 </style>

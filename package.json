@@ -4,8 +4,8 @@
   "description": "Visual markdown editor for 11ty blog with GitHub PR integration",
   "main": "editor-server.js",
   "scripts": {
-    "start": "node editor-server.js",
-    "dev": "nodemon editor-server.js",
+    "start": "ts-node editor-server.ts",
+    "dev": "nodemon editor-server.cjs",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
     "lint": "eslint '**/*.{js,ts,vue}' --fix"
@@ -15,13 +15,14 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "vue": "^3.5.27",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "highlight.js": "^11.11.1",
     "jest-fetch-mock": "^3.0.3",
-    "vite": "^5.0.0"
+    "ts-node": "^10.9.2",
+    "vite": "^5.0.0",
+    "vue": "^3.5.27"
   },
   "workspaces": [
     "editor"

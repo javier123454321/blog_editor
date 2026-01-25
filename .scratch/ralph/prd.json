@@ -235,9 +235,26 @@
         "Verify in browser using dev-browser skill"
       ],
       "priority": 14,
-      "in-progress": true,
-      "passes": false,
-      "notes": ""
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented file selection, content loading, and preview. Verified with dev-browser."
+    },
+{
+      "id": "US-015",
+      "title": "Add save file functionality to editor",
+      "description": "As a user, I need to save my edits to the file system.",
+      "acceptanceCriteria": [
+        "Save button in editor toolbar",
+        "Clicking save calls POST /api/file/:path with current content",
+        "Shows success/error feedback to user",
+        "Includes X-Auth-Password header in API request",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented Save button in EditorPane toolbar, save handler in App.vue with success/error feedback, includes X-Auth-Password header. All quality checks pass."
     },
     {
       "id": "US-016",
@@ -252,18 +269,18 @@
       ],
       "priority": 16,
       "in-progress": false,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented GET /branches using git branch in blog directory via execFile"
     },
     {
       "id": "US-017",
       "title": "Add POST /checkout endpoint",
-      "description": "As a user, I need to switch between git branches.",
+      "description": "As a developer, I need an API to switch git branches.",
       "acceptanceCriteria": [
         "POST /checkout accepts { branch: string } in request body",
-        "Executes git checkout in blog subdirectory",
+        "Executes git checkout command in blog subdirectory",
         "Returns { success: true, branch: string } on success",
-        "Returns error message if checkout fails",
+        "Returns error if branch doesn't exist or checkout fails",
         "Typecheck passes"
       ],
       "priority": 17,
@@ -274,12 +291,12 @@
     {
       "id": "US-018",
       "title": "Add POST /branch/create endpoint",
-      "description": "As a user, I need to create and checkout a new branch.",
+      "description": "As a developer, I need an API to create new git branches.",
       "acceptanceCriteria": [
-        "POST /branch/create accepts { branchName: string } in request body",
-        "Executes git checkout -b in blog subdirectory",
+        "POST /branch/create accepts { name: string } in request body",
+        "Executes git checkout -b command in blog subdirectory",
         "Returns { success: true, branch: string } on success",
-        "Returns error message if branch creation fails",
+        "Returns error if branch already exists or creation fails",
         "Typecheck passes"
       ],
       "priority": 18,
@@ -289,14 +306,14 @@
     },
     {
       "id": "US-019",
-      "title": "Create branch selector in header",
-      "description": "As a user, I need to see and switch branches from the UI.",
+      "title": "Create branch selector dropdown in header",
+      "description": "As a user, I need to see and switch between git branches.",
       "acceptanceCriteria": [
-        "Header displays current branch name",
-        "Dropdown menu shows all available branches",
-        "Clicking branch calls POST /api/checkout",
-        "Shows loading state while switching",
-        "Displays error message if checkout fails",
+        "BranchSelector.vue component in header",
+        "Fetches branches via GET /api/branches on mount",
+        "Displays current branch name",
+        "Dropdown shows all available branches",
+        "Clicking branch calls POST /api/checkout and refreshes file tree",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
@@ -307,15 +324,15 @@
     },
     {
       "id": "US-020",
-      "title": "Create new branch modal",
-      "description": "As a user, I need to create new branches from the UI.",
+      "title": "Create new branch modal/form",
+      "description": "As a user, I need to create new branches for my changes.",
       "acceptanceCriteria": [
-        "Header has 'New Branch' button",
-        "Clicking button opens modal with text input",
-        "Input has placeholder text 'Enter branch name'",
-        "Submit button calls POST /api/branch/create",
-        "Modal closes and branch selector updates on success",
-        "Shows error message if creation fails",
+        "NewBranchModal.vue component",
+        "Accessible from branch selector dropdown",
+        "Input field for branch name",
+        "Calls POST /api/branch/create on submit",
+        "Closes modal and updates branch selector on success",
+        "Shows error message on failure",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
@@ -327,12 +344,12 @@
     {
       "id": "US-021",
       "title": "Add POST /commit endpoint",
-      "description": "As a developer, I need to commit changes to git.",
+      "description": "As a developer, I need an API to commit changes.",
       "acceptanceCriteria": [
         "POST /commit accepts { message: string } in request body",
-        "Executes git add -A and git commit -m in blog subdirectory",
-        "Returns { success: true, commit: string } with commit hash",
-        "Returns error if no changes to commit",
+        "Executes git add and git commit in blog subdirectory",
+        "Returns { success: true, commit: string } with commit hash on success",
+        "Returns error if nothing to commit or commit fails",
         "Typecheck passes"
       ],
       "priority": 21,
@@ -343,11 +360,12 @@
     {
       "id": "US-022",
       "title": "Add POST /push endpoint",
-      "description": "As a developer, I need to push commits to remote.",
+      "description": "As a developer, I need an API to push commits to remote.",
       "acceptanceCriteria": [
-        "POST /push executes git push origin in blog subdirectory",
-        "Returns { success: true } on successful push",
-        "Returns error message if push fails",
+        "POST /push pushes current branch to origin",
+        "Executes git push in blog subdirectory",
+        "Returns { success: true } on success",
+        "Returns error if push fails",
         "Typecheck passes"
       ],
       "priority": 22,
@@ -358,13 +376,14 @@
     {
       "id": "US-023",
       "title": "Add POST /pr endpoint for GitHub PR creation",
-      "description": "As a developer, I need to create pull requests via the API.",
+      "description": "As a developer, I need an API to create pull requests via GitHub API.",
       "acceptanceCriteria": [
-        "POST /pr accepts { title: string, body: string } in request body",
-        "Uses GITHUB_TOKEN environment variable for authentication",
-        "Creates PR via GitHub API pointing to main branch",
-        "Returns { success: true, prUrl: string } with PR URL",
-        "Returns error message if PR creation fails",
+        "POST /pr accepts { title: string, body?: string } in request body",
+        "Uses GitHub API (Octokit or fetch) to create PR",
+        "Uses GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME from env",
+        "Creates PR from current branch to main/master",
+        "Returns { success: true, url: string } with PR URL on success",
+        "Updates existing PR if one already exists for the branch",
         "Typecheck passes"
       ],
       "priority": 23,
@@ -374,14 +393,15 @@
     },
     {
       "id": "US-024",
-      "title": "Create commit message input dialog",
-      "description": "As a user, I need to enter a commit message before proposing changes.",
+      "title": "Create Propose Changes button and commit dialog",
+      "description": "As a user, I need to commit my changes and create a pull request.",
       "acceptanceCriteria": [
-        "Modal with textarea for commit message",
-        "Modal with optional title field for PR title",
-        "Modal with optional body field for PR description",
-        "Submit button triggers commit workflow",
-        "Cancel button closes modal without changes",
+        "ProposeChanges.vue component with 'Propose Changes' button",
+        "Button opens dialog for commit message input",
+        "On submit: calls POST /api/commit, then POST /api/push, then POST /api/pr",
+        "Shows progress/loading state during operations",
+        "Displays PR URL on success",
+        "Shows error messages on failure",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
@@ -392,19 +412,35 @@
     },
     {
       "id": "US-025",
-      "title": "Create 'Propose Changes' button and workflow",
-      "description": "As a user, I need a button to propose my changes as a PR.",
+      "title": "Add WYSIWYG markdown editor mode",
+      "description": "As a user, I need a visual editor for markdown content.",
       "acceptanceCriteria": [
-        "EditorPane header has 'Propose Changes' button",
-        "Clicking button opens commit message dialog",
-        "After entering message, workflow: commit → push → create PR",
-        "Shows progress messages during workflow",
-        "Displays PR URL on successful creation",
-        "Displays error message if any step fails",
+        "WysiwygEditor.vue component using lightweight WYSIWYG library",
+        "Supports basic formatting: bold, italic, headings, links, lists",
+        "Receives content as prop, emits 'update' on change",
+        "Integrated as third tab in EditorPane alongside Edit and Preview",
         "Typecheck passes",
         "Verify in browser using dev-browser skill"
       ],
       "priority": 25,
+      "in-progress": false,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-026",
+      "title": "Create new file functionality",
+      "description": "As a user, I need to create new blog posts.",
+      "acceptanceCriteria": [
+        "New File button in sidebar or header",
+        "Opens dialog for file name input",
+        "Creates file with default frontmatter template",
+        "Refreshes file tree after creation",
+        "Opens new file in editor",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 26,
       "in-progress": false,
       "passes": false,
       "notes": ""

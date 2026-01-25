@@ -6,7 +6,10 @@
         <FileTree :files="files" @select="loadContent" />
       </template>
       <div v-if="currentFile" class="editor-container">
-        <EditorPane>
+        <div v-if="saveMessage" :class="['save-message', saveMessage.type]">
+          {{ saveMessage.text }}
+        </div>
+        <EditorPane @save="saveFile">
           <template #edit>
             <MarkdownEditor :model-value="content" @update:model-value="updateContent" />
           </template>
@@ -36,6 +39,7 @@ const { isAuthenticated, password } = useAuth();
 const files = ref<{ path: string; name: string }[]>([]);
 const content = ref('');
 const currentFile = ref('');
+const saveMessage = ref<{ text: string; type: 'success' | 'error' } | null>(null);
 
 const loadFiles = async () => {
   try {
@@ -72,6 +76,38 @@ const loadContent = async (path: string) => {
 
 const updateContent = (newContent: string) => {
   content.value = newContent;
+};
+
+const saveFile = async () => {
+  if (!currentFile.value) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/file/${encodeURIComponent(currentFile.value)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Password': password.value || '',
+      },
+      body: JSON.stringify({ content: content.value }),
+    });
+
+    if (res.ok) {
+      saveMessage.value = { text: 'File saved successfully!', type: 'success' };
+    } else {
+      const data = await res.json();
+      saveMessage.value = { text: data.error || 'Failed to save file', type: 'error' };
+    }
+  } catch (e) {
+    console.error('Failed to save file', e);
+    saveMessage.value = { text: 'Failed to save file', type: 'error' };
+  }
+
+  // Clear message after 3 seconds
+  setTimeout(() => {
+    saveMessage.value = null;
+  }, 3000);
 };
 
 onMounted(() => {
@@ -128,5 +164,24 @@ body {
 .editor-placeholder p {
   font-size: 1.1rem;
   color: #666;
+}
+
+.save-message {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.save-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.save-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 </style>
