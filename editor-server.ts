@@ -111,36 +111,79 @@ app.get('/files', (req: Request, res: Response) => {
 
 // GET /file/:path endpoint
 app.get('/file/:path', (req: Request, res: Response) => {
-  try {
-    let filePath = req.params.path;
-    
-    // Decode URL-encoded path
-    filePath = decodeURIComponent(filePath);
+   try {
+     let filePath = req.params.path;
+     
+     // Decode URL-encoded path
+     filePath = decodeURIComponent(filePath);
 
-    // Validate path - prevent directory traversal
-    if (filePath.includes('..')) {
-      return res.status(400).json({ success: false, error: 'Invalid path' });
-    }
+     // Validate path - prevent directory traversal
+     if (filePath.includes('..')) {
+       return res.status(400).json({ success: false, error: 'Invalid path' });
+     }
 
-    const fullPath = path.join(BLOG_DIR, filePath);
+     const fullPath = path.join(BLOG_DIR, filePath);
 
-    // Ensure the resolved path is within BLOG_DIR
-    const resolvedPath = path.resolve(fullPath);
-    const resolvedBlogDir = path.resolve(BLOG_DIR);
-    
-    if (!resolvedPath.startsWith(resolvedBlogDir)) {
-      return res.status(400).json({ success: false, error: 'Invalid path' });
-    }
+     // Ensure the resolved path is within BLOG_DIR
+     const resolvedPath = path.resolve(fullPath);
+     const resolvedBlogDir = path.resolve(BLOG_DIR);
+     
+     if (!resolvedPath.startsWith(resolvedBlogDir)) {
+       return res.status(400).json({ success: false, error: 'Invalid path' });
+     }
 
-    if (!fs.existsSync(fullPath)) {
-      return res.status(404).json({ success: false, error: 'File not found' });
-    }
+     if (!fs.existsSync(fullPath)) {
+       return res.status(404).json({ success: false, error: 'File not found' });
+     }
 
-    const content = fs.readFileSync(fullPath, 'utf-8');
-    res.json({ content, path: filePath });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Failed to read file' });
-  }
+     const content = fs.readFileSync(fullPath, 'utf-8');
+     res.json({ content, path: filePath });
+   } catch (error) {
+     res.status(500).json({ success: false, error: 'Failed to read file' });
+   }
+});
+
+// POST /file/:path endpoint
+app.post('/file/:path', (req: Request, res: Response) => {
+   try {
+     const { content } = req.body;
+
+     if (content === undefined || typeof content !== 'string') {
+       return res.status(400).json({ success: false, error: 'Content is required' });
+     }
+
+     let filePath = req.params.path;
+     
+     // Decode URL-encoded path
+     filePath = decodeURIComponent(filePath);
+
+     // Validate path - prevent directory traversal
+     if (filePath.includes('..')) {
+       return res.status(400).json({ success: false, error: 'Invalid path' });
+     }
+
+     const fullPath = path.join(BLOG_DIR, filePath);
+
+     // Ensure the resolved path is within BLOG_DIR
+     const resolvedPath = path.resolve(fullPath);
+     const resolvedBlogDir = path.resolve(BLOG_DIR);
+     
+     if (!resolvedPath.startsWith(resolvedBlogDir)) {
+       return res.status(400).json({ success: false, error: 'Invalid path' });
+     }
+
+     // Create directories if they don't exist
+     const dir = path.dirname(fullPath);
+     if (!fs.existsSync(dir)) {
+       fs.mkdirSync(dir, { recursive: true });
+     }
+
+     // Write the file
+     fs.writeFileSync(fullPath, content, 'utf-8');
+     res.json({ success: true, path: filePath });
+   } catch (error) {
+     res.status(500).json({ success: false, error: 'Failed to save file' });
+   }
 });
 
 // Start server
