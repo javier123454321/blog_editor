@@ -252,6 +252,47 @@ app.post('/branch/create', (req: Request, res: Response) => {
   });
 });
 
+// POST /commit endpoint
+app.post('/commit', (req: Request, res: Response) => {
+  const { message } = req.body;
+
+  if (!message || typeof message !== 'string') {
+    return res.status(400).json({ success: false, error: 'Commit message is required' });
+  }
+
+  // First, stage all changes with git add
+  execFile('git', ['add', '.'], { cwd: GIT_DIR }, (addError, addStdout, addStderr) => {
+    if (addError) {
+      console.error(`Error executing git add: ${addError.message}`);
+      return res.status(500).json({ success: false, error: `Failed to stage changes: ${addStderr || addError.message}` });
+    }
+
+    // Then, commit the changes
+    execFile('git', ['commit', '-m', message], { cwd: GIT_DIR }, (commitError, commitStdout, commitStderr) => {
+      if (commitError) {
+        // Check if error is because there's nothing to commit
+        if (commitStderr.includes('nothing to commit') || commitStderr.includes('no changes added')) {
+          return res.status(400).json({ success: false, error: 'Nothing to commit' });
+        }
+        console.error(`Error executing git commit: ${commitError.message}`);
+        return res.status(500).json({ success: false, error: `Failed to commit: ${commitStderr || commitError.message}` });
+      }
+
+      // Extract commit hash from output
+      execFile('git', ['rev-parse', 'HEAD'], { cwd: GIT_DIR }, (hashError, hashStdout, hashStderr) => {
+        if (hashError) {
+          console.error(`Error getting commit hash: ${hashError.message}`);
+          // Still consider the commit successful even if we can't get the hash
+          return res.json({ success: true, commit: 'unknown' });
+        }
+
+        const commitHash = hashStdout.trim();
+        res.json({ success: true, commit: commitHash });
+      });
+    });
+  });
+});
+
 // Start server
 app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Server is running on http://localhost:${PORT}`);
