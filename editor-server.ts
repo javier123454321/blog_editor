@@ -2,11 +2,14 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 
 dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
+const BLOG_DIR = path.join(__dirname, 'blog', 'src', 'blog');
 
 // Middleware
 app.use(cors({
@@ -62,6 +65,47 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next();
   } else {
     authMiddleware(req, res, next);
+  }
+});
+
+// Helper function to recursively get markdown files
+function getMarkdownFiles(dir: string, baseDir: string = dir): Array<{ path: string; name: string }> {
+  let files: Array<{ path: string; name: string }> = [];
+
+  try {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+    entries.forEach(entry => {
+      const fullPath = path.join(dir, entry.name);
+      const relativePath = path.relative(baseDir, fullPath);
+
+      if (entry.isDirectory()) {
+        files = files.concat(getMarkdownFiles(fullPath, baseDir));
+      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        files.push({
+          path: relativePath,
+          name: entry.name
+        });
+      }
+    });
+  } catch (error) {
+    console.error(`Error reading directory ${dir}:`, error);
+  }
+
+  return files;
+}
+
+// GET /files endpoint
+app.get('/files', (req: Request, res: Response) => {
+  try {
+    if (!fs.existsSync(BLOG_DIR)) {
+      return res.json({ files: [] });
+    }
+
+    const files = getMarkdownFiles(BLOG_DIR);
+    res.json({ files });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to list files' });
   }
 });
 
