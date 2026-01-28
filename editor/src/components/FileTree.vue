@@ -136,12 +136,12 @@ onMounted(() => {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text);
 }
 
 .new-file-button {
   padding: 0.4rem 0.8rem;
-  background-color: #007bff;
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 4px;
@@ -152,7 +152,7 @@ onMounted(() => {
 }
 
 .new-file-button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-700);
 }
 
 .loading-state,
@@ -160,15 +160,15 @@ onMounted(() => {
 .empty-state {
   padding: 1rem;
   text-align: center;
-  color: #666;
+  color: var(--muted);
   font-size: 0.9rem;
 }
 
 .spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #007bff;
+  border: 2px solid var(--sidebar-bg);
+  border-top: 2px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0.5rem auto;
@@ -231,7 +231,7 @@ onMounted(() => {
 }
 
 .file-button:hover {
-  background-color: #f0f0f0;
+  background-color: var(--sidebar-bg);
 }
 
 .file-button:active {

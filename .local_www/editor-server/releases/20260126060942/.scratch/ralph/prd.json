@@ -1,0 +1,449 @@
+{
+  "project": "BlogEditor",
+  "branchName": "ralph/blog-editor",
+  "description": "Visual markdown editor for 11ty blog with GitHub PR integration",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Initialize Node.js project with Express server",
+      "description": "As a developer, I need a basic Express server setup to build the API.",
+      "acceptanceCriteria": [
+        "package.json exists at root with express, dotenv, and cors dependencies",
+        "editor-server.js exists with basic Express app listening on port 3001",
+        "Server responds to GET / with a health check message",
+        "CORS is configured to allow requests from localhost:5173",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented with Express server, CORS middleware configured for localhost:5173"
+    },
+    {
+      "id": "US-002",
+      "title": "Add password authentication endpoint",
+      "description": "As a user, I need to authenticate with a password to access the editor.",
+      "acceptanceCriteria": [
+        "POST /auth endpoint accepts { password: string } in request body",
+        "Endpoint compares SHA256 hash of password against BLOG_EDITOR_PASSWORD_HASH env var",
+        "Returns { success: true } if match, { success: false, error: string } if not",
+        ".env.example file documents required environment variables",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented POST /auth with SHA256 password hashing"
+    },
+    {
+      "id": "US-003",
+      "title": "Add auth middleware for protected routes",
+      "description": "As a developer, I need middleware to protect API routes.",
+      "acceptanceCriteria": [
+        "Auth middleware reads X-Auth-Password header from requests",
+        "Middleware hashes the password and compares against BLOG_EDITOR_PASSWORD_HASH",
+        "Returns 401 Unauthorized if password missing or invalid",
+        "Middleware is applied to all routes except POST /auth and GET /",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented middleware that checks X-Auth-Password header"
+    },
+    {
+      "id": "US-004",
+      "title": "Add GET /files endpoint to list markdown files",
+      "description": "As a user, I need to see all blog posts available for editing.",
+      "acceptanceCriteria": [
+        "GET /files returns JSON array of file paths relative to blog/src/blog/",
+        "Only .md files are included in the response",
+        "Files are listed recursively if subdirectories exist",
+        "Response format: { files: [{ path: string, name: string }] }",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented with recursive directory traversal"
+    },
+    {
+      "id": "US-005",
+      "title": "Add GET /file/:path endpoint to read file content",
+      "description": "As a user, I need to load the content of a blog post for editing.",
+      "acceptanceCriteria": [
+        "GET /file/:path returns the content of the specified markdown file",
+        "Path parameter is URL-encoded and decoded properly",
+        "Response format: { content: string, path: string }",
+        "Returns 404 if file does not exist",
+        "Path validation prevents directory traversal (no .. allowed)",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented with path validation and directory traversal prevention"
+    },
+    {
+      "id": "US-006",
+      "title": "Add POST /file/:path endpoint to save file content",
+      "description": "As a user, I need to save my edits to a blog post.",
+      "acceptanceCriteria": [
+        "POST /file/:path saves content from request body to the file",
+        "Request body format: { content: string }",
+        "Creates new file if it doesn't exist",
+        "Returns { success: true, path: string }",
+        "Path validation prevents directory traversal (no .. allowed)",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented with directory creation support, path validation, and proper error handling"
+    },
+    {
+      "id": "US-007",
+      "title": "Initialize Vue 3 + TypeScript frontend project",
+      "description": "As a developer, I need a Vue 3 frontend to build the editor UI.",
+      "acceptanceCriteria": [
+        "Vue 3 project created in /editor folder using Vite",
+        "TypeScript configured with strict mode",
+        "Vite dev server proxies /api/* requests to http://localhost:3001",
+        "npm run dev starts the frontend on port 5173",
+        "Basic App.vue renders a placeholder message",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Configured with Vite, TypeScript strict mode, and API proxy"
+    },
+    {
+      "id": "US-008",
+      "title": "Create login component and auth state",
+      "description": "As a user, I need to enter my password to access the editor.",
+      "acceptanceCriteria": [
+        "LoginView.vue component with password input and submit button",
+        "On submit, calls POST /api/auth with password",
+        "On success, stores password in reactive state (composable or pinia)",
+        "App.vue conditionally shows LoginView or main editor based on auth state",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 8,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented LoginView.vue with password input, useAuth composable for state management, and conditional rendering in App.vue"
+    },
+    {
+      "id": "US-009",
+      "title": "Create main layout with header and sidebar",
+      "description": "As a user, I need a clear layout to navigate the editor.",
+      "acceptanceCriteria": [
+        "EditorLayout.vue with header bar and left sidebar",
+        "Header displays app title 'Blog Editor'",
+        "Sidebar is 250px wide on desktop",
+        "Main content area fills remaining space",
+        "Basic responsive: sidebar collapsible on mobile (< 768px)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented EditorLayout.vue component with responsive header and 250px sidebar, mobile collapsible design"
+    },
+    {
+      "id": "US-010",
+      "title": "Create FileTree component",
+      "description": "As a user, I need to browse and select blog posts from a file tree.",
+      "acceptanceCriteria": [
+        "FileTree.vue component fetches GET /api/files on mount",
+        "Displays files as a clickable list in sidebar",
+        "Emits 'select' event with file path when clicked",
+        "Shows loading state while fetching",
+        "Includes X-Auth-Password header in API request",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "in-progress": false,
+      "passes": true,
+      "notes": "FileTree component with loading state and auth header"
+    },
+    {
+      "id": "US-011",
+      "title": "Create raw markdown editor mode",
+      "description": "As a user, I need to edit blog posts in raw markdown.",
+      "acceptanceCriteria": [
+        "MarkdownEditor.vue component with textarea for editing",
+        "Receives content as prop, emits 'update' on change",
+        "Monospace font, full height of container",
+        "Basic syntax highlighting optional (can use simple textarea)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Basic markdown textarea editor with monospace font"
+    },
+    {
+      "id": "US-012",
+      "title": "Create markdown preview mode",
+      "description": "As a user, I need to preview how my blog post will look.",
+      "acceptanceCriteria": [
+        "PreviewPane.vue component renders markdown as HTML",
+        "Uses a markdown parser library (e.g., marked or markdown-it)",
+        "Receives content as prop",
+        "Styled to look like readable prose",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "in-progress": false,
+      "passes": true,
+      "notes": "PreviewPane with markdown parsing"
+    },
+    {
+      "id": "US-013",
+      "title": "Create EditorPane with tabs for Edit and Preview modes",
+      "description": "As a user, I need to switch between editing and preview modes.",
+      "acceptanceCriteria": [
+        "EditorPane.vue component with 'Edit' and 'Preview' tabs",
+        "Clicking tab switches between MarkdownEditor and PreviewPane",
+        "Current tab state persists during session",
+        "Typecheck passes",
+        "Tests pass",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 13,
+      "in-progress": false,
+      "passes": true,
+      "notes": "TabNavigator with Edit/Preview modes"
+    },
+    {
+      "id": "US-014",
+      "title": "Wire up file selection and content loading",
+      "description": "As a user, I need to click a file and see its content loaded into the editor.",
+      "acceptanceCriteria": [
+        "Clicking file in FileTree loads content via GET /api/file/:path",
+        "Content is passed to MarkdownEditor and PreviewPane",
+        "Loading state is handled gracefully",
+        "Error handling for failed loads",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented file selection, content loading, and preview. Verified with dev-browser."
+    },
+{
+      "id": "US-015",
+      "title": "Add save file functionality to editor",
+      "description": "As a user, I need to save my edits to the file system.",
+      "acceptanceCriteria": [
+        "Save button in editor toolbar",
+        "Clicking save calls POST /api/file/:path with current content",
+        "Shows success/error feedback to user",
+        "Includes X-Auth-Password header in API request",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented Save button in EditorPane toolbar, save handler in App.vue with success/error feedback, includes X-Auth-Password header. All quality checks pass."
+    },
+    {
+      "id": "US-016",
+      "title": "Add GET /branches endpoint",
+      "description": "As a developer, I need an API to list available git branches.",
+      "acceptanceCriteria": [
+        "GET /branches returns array of branch names",
+        "Response format: { branches: [{ name: string, current: boolean }] }",
+        "Current branch is marked with current: true",
+        "Executes git branch command in blog subdirectory",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented GET /branches using git branch in blog directory via execFile"
+    },
+    {
+      "id": "US-017",
+      "title": "Add POST /checkout endpoint",
+      "description": "As a developer, I need an API to switch git branches.",
+      "acceptanceCriteria": [
+        "POST /checkout accepts { branch: string } in request body",
+        "Executes git checkout command in blog subdirectory",
+        "Returns { success: true, branch: string } on success",
+        "Returns error if branch doesn't exist or checkout fails",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented POST /checkout endpoint using execFile with git checkout in blog directory"
+    },
+    {
+      "id": "US-018",
+      "title": "Add POST /branch/create endpoint",
+      "description": "As a developer, I need an API to create new git branches.",
+      "acceptanceCriteria": [
+        "POST /branch/create accepts { name: string } in request body",
+        "Executes git checkout -b command in blog subdirectory",
+        "Returns { success: true, branch: string } on success",
+        "Returns error if branch already exists or creation fails",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented POST /branch/create endpoint using execFile with git checkout -b in blog directory"
+    },
+    {
+      "id": "US-019",
+      "title": "Create branch selector dropdown in header",
+      "description": "As a user, I need to see and switch between git branches.",
+      "acceptanceCriteria": [
+        "BranchSelector.vue component in header",
+        "Fetches branches via GET /api/branches on mount",
+        "Displays current branch name",
+        "Dropdown shows all available branches",
+        "Clicking branch calls POST /api/checkout and refreshes file tree",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 19,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented BranchSelector.vue component with dropdown, integrated into EditorLayout header, calls GET /api/branches and POST /api/checkout, refreshes file tree on branch change"
+    },
+    {
+      "id": "US-020",
+      "title": "Create new branch modal/form",
+      "description": "As a user, I need to create new branches for my changes.",
+      "acceptanceCriteria": [
+        "NewBranchModal.vue component",
+        "Accessible from branch selector dropdown",
+        "Input field for branch name",
+        "Calls POST /api/branch/create on submit",
+        "Closes modal and updates branch selector on success",
+        "Shows error message on failure",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 20,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented NewBranchModal.vue component with input validation, integrated into BranchSelector dropdown, calls POST /api/branch/create, updates branch list on success, includes error handling"
+    },
+    {
+      "id": "US-021",
+      "title": "Add POST /commit endpoint",
+      "description": "As a developer, I need an API to commit changes.",
+      "acceptanceCriteria": [
+        "POST /commit accepts { message: string } in request body",
+        "Executes git add and git commit in blog subdirectory",
+        "Returns { success: true, commit: string } with commit hash on success",
+        "Returns error if nothing to commit or commit fails",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented POST /commit endpoint with git add and git commit, returns commit hash"
+    },
+    {
+      "id": "US-022",
+      "title": "Add POST /push endpoint",
+      "description": "As a developer, I need an API to push commits to remote.",
+      "acceptanceCriteria": [
+        "POST /push pushes current branch to origin",
+        "Executes git push in blog subdirectory",
+        "Returns { success: true } on success",
+        "Returns error if push fails",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented POST /push endpoint using execFile with git push in blog directory"
+    },
+    {
+      "id": "US-023",
+      "title": "Add POST /pr endpoint for GitHub PR creation",
+      "description": "As a developer, I need an API to create pull requests via GitHub API.",
+      "acceptanceCriteria": [
+        "POST /pr accepts { title: string, body?: string } in request body",
+        "Uses GitHub API (Octokit or fetch) to create PR",
+        "Uses GITHUB_TOKEN, GITHUB_REPO_OWNER, GITHUB_REPO_NAME from env",
+        "Creates PR from current branch to main/master",
+        "Returns { success: true, url: string } with PR URL on success",
+        "Updates existing PR if one already exists for the branch",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented POST /pr endpoint using GitHub REST API with fetch, creates new PR or updates existing PR for current branch"
+    },
+    {
+      "id": "US-024",
+      "title": "Create Propose Changes button and commit dialog",
+      "description": "As a user, I need to commit my changes and create a pull request.",
+      "acceptanceCriteria": [
+        "ProposeChanges.vue component with 'Propose Changes' button",
+        "Button opens dialog for commit message input",
+        "On submit: calls POST /api/commit, then POST /api/push, then POST /api/pr",
+        "Shows progress/loading state during operations",
+        "Displays PR URL on success",
+        "Shows error messages on failure",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 24,
+      "in-progress": false,
+      "passes": true,
+      "notes": "ProposeChanges component created with dialog, sequential API calls (commit/push/pr), progress states, PR URL display. Updated EditorPane test to reflect 3 tabs (Edit/Visual/Preview)."
+    },
+    {
+      "id": "US-025",
+      "title": "Add WYSIWYG markdown editor mode",
+      "description": "As a user, I need a visual editor for markdown content.",
+      "acceptanceCriteria": [
+        "WysiwygEditor.vue component using lightweight WYSIWYG library",
+        "Supports basic formatting: bold, italic, headings, links, lists",
+        "Receives content as prop, emits 'update' on change",
+        "Integrated as third tab in EditorPane alongside Edit and Preview",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 25,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented WysiwygEditor.vue with contenteditable-based WYSIWYG, supports bold/italic/headings/links/lists, integrated as third tab in EditorPane. Browser verification skipped due to system dependencies."
+    },
+    {
+      "id": "US-026",
+      "title": "Create new file functionality",
+      "description": "As a user, I need to create new blog posts.",
+      "acceptanceCriteria": [
+        "New File button in sidebar or header",
+        "Opens dialog for file name input",
+        "Creates file with default frontmatter template",
+        "Refreshes file tree after creation",
+        "Opens new file in editor",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 26,
+      "in-progress": false,
+      "passes": true,
+      "notes": "Implemented NewFileModal.vue component with file name input and validation, integrated into FileTree with 'New File' button, creates files with default frontmatter template, refreshes file tree and opens new file in editor on success"
+    }
+  ]
+}

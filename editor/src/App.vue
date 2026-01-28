@@ -155,7 +155,39 @@ body {
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #333;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Theme variables */
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --header-bg: #ffffff;
+  --sidebar-bg: #fafafa;
+  --border: #e0e0e0;
+  --text: #222222;
+  --muted: #666666;
+  --primary: #007bff;
+  --primary-700: #0056b3;
+  --editor-bg: #fafafa;
+  --editor-focus-bg: #ffffff;
+  --scroll-thumb: #ccc;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0d0f;
+  --surface: #0f1113;
+  --header-bg: #0f1113;
+  --sidebar-bg: #0b0d0f;
+  --border: #202428;
+  --text: #e6eef6;
+  --muted: #9aa6b2;
+  --primary: #1f6feb;
+  --primary-700: #1158d7;
+  --editor-bg: #0b0d0f;
+  --editor-focus-bg: #111316;
+  --scroll-thumb: #2b3136;
 }
 </style>
 
@@ -167,8 +199,6 @@ body {
 
 .editor-container {
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .editor-placeholder {
@@ -201,5 +231,13 @@ body {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 1rem;
 }
 </style>

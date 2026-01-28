@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Work-Sans-SemiBold';
+    src:url('Work-Sans-SemiBold.ttf.woff') format('woff'),
+        url('Work-Sans-SemiBold.ttf.svg#Work-Sans-SemiBold') format('svg'),
+        url('Work-Sans-SemiBold.ttf.eot'),
+        url('Work-Sans-SemiBold.ttf.eot?#iefix') format('embedded-opentype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+
+.blogPost > * > * > a{
+    @apply border-b-2 border-black bg-slate-50;
+}
+.blogPost > * > a{
+    @apply border-b-2 border-black bg-slate-50;
+}
+.blogPost > blockquote {
+    @apply border-l-8 border-black bg-yellow-50 pr-3 py-1;
+}
+.blogPost > h2 {
+    @apply font-black;
+}
+.blogPost > p > code {
+    @apply p-1 bg-slate-100;
+}
+blogpost > p {
+    @apply my-2 border-4 border-red-500;
+}
+
+blogpost > ol {
+    @apply border-4 border-red-500;
+}
+#main-content > h2 {
+    @apply font-bold text-4xl;
+}

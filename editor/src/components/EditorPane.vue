@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="editor-pane">
     <div class="toolbar">
       <div class="tabs">
         <button 
@@ -17,13 +17,13 @@
       </div>
       <button class="save-button" @click="$emit('save')">Save</button>
     </div>
-    <div v-if="activeTab === 'edit'">
+    <div v-if="activeTab === 'edit'" class="editor-content">
       <slot name="edit" />
     </div>
-    <div v-if="activeTab === 'wysiwyg'">
+    <div v-if="activeTab === 'wysiwyg'" class="editor-content">
       <slot name="wysiwyg" />
     </div>
-    <div v-if="activeTab === 'preview'">
+    <div v-if="activeTab === 'preview'" class="editor-content">
       <slot name="preview" />
     </div>
   </div>
@@ -42,13 +42,19 @@ function switchTab(tab: string) {
 </script>
 
 <style scoped>
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem;
+  flex-shrink: 0;
 }
 
 .tabs {
@@ -60,6 +66,7 @@ button {
   border: none;
   cursor: pointer;
   background: none;
+  color: var(--text);
 }
 
 button.active {
@@ -68,13 +75,19 @@ button.active {
 }
 
 .save-button {
-  background-color: #007bff;
+  background-color: var(--primary);
   color: white;
   border-radius: 4px;
   font-weight: 500;
 }
 
 .save-button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-700);
+}
+
+.editor-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 </style>

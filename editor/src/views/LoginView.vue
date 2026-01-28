@@ -83,13 +83,13 @@ const handleSubmit = async () => {
 h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2rem;
-  color: #333;
+  color: var(--text);
   text-align: center;
 }
 
 .subtitle {
   text-align: center;
-  color: #666;
+  color: var(--muted);
   margin: 0 0 1.5rem 0;
   font-size: 0.95rem;
 }
@@ -108,13 +108,13 @@ h1 {
 
 label {
   font-weight: 600;
-  color: #333;
+  color: var(--text);
   font-size: 0.9rem;
 }
 
 input {
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -127,7 +127,7 @@ input:focus {
 }
 
 input:disabled {
-  background-color: #f5f5f5;
+  background-color: var(--sidebar-bg);
   cursor: not-allowed;
 }
 

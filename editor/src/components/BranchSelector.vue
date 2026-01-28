@@ -209,8 +209,8 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--border);
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;

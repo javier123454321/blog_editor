@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "dom"],
+    "skipLibCheck": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true
+  },
+  "include": ["editor/src/**/*", "editor-server.ts"]
+}

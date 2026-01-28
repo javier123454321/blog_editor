@@ -218,7 +218,7 @@ watch(() => props.modelValue, (newValue) => {
   display: flex;
   gap: 4px;
   padding: 8px;
-  background-color: #f5f5f5;
+  background-color: var(--sidebar-bg);
   border-bottom: 1px solid #ccc;
   flex-shrink: 0;
 }

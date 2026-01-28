@@ -1,19 +1,14 @@
 <template>
-  <div class="markdown-editor-container">
-    <textarea
-      ref="textarea"
-      class="markdown-editor"
-      :value="content"
-      @input="handleInput"
-    ></textarea>
-    <pre v-html="highlightedContent" class="markdown-highlight"></pre>
-  </div>
-
+  <textarea
+    ref="textarea"
+    class="markdown-editor"
+    :value="content"
+    @input="handleInput"
+  ></textarea>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import hljs from 'highlight.js';
 
 export default defineComponent({
   name: 'MarkdownEditor',
@@ -26,16 +21,10 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const localContent = ref(props.modelValue);
-    const highlightedContent = ref('');
 
     watch(() => props.modelValue, (newVal) => {
       localContent.value = newVal;
-      highlightContent();
     });
-
-    const highlightContent = () => {
-      highlightedContent.value = hljs.highlightAuto(localContent.value).value;
-    };
 
     const handleInput = (event: Event) => {
       const value = (event.target as HTMLTextAreaElement).value;
@@ -43,11 +32,8 @@ export default defineComponent({
       emit('update:modelValue', value);
     };
 
-    watch(() => localContent.value, highlightContent, { immediate: true });
-
     return {
       content: localContent,
-      highlightedContent,
       handleInput,
     };
   },
@@ -58,32 +44,20 @@ export default defineComponent({
 .markdown-editor {
   width: 100%;
   height: 100%;
-  font-family: monospace;
+  min-height: 100%;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
   font-size: 14px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  line-height: 1.6;
+  padding: 1rem;
+  border: none;
+  border-radius: 0;
   resize: none;
+  outline: none;
+  background-color: var(--editor-bg);
+  color: var(--text);
 }
 
-.markdown-editor-container {
-  position: relative;
-  display: flex;
+.markdown-editor:focus {
+  background-color: var(--editor-focus-bg);
 }
-
-.markdown-editor {
-  position: absolute;
-  background: transparent;
-  z-index: 1;
-  color: transparent;
-  caret-color: black;
-}
-
-.markdown-highlight {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-family: monospace;
-  font-size: 14px;
-}
-
 </style>

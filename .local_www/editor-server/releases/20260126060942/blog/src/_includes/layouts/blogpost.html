@@ -1,0 +1,23 @@
+{% layout "layouts/base.html" %} {% block content %}
+<main id="main-content" tabindex="-1" class="">
+  <div class="px-4 bg-white drop-shadow-hard border-black border-4  max-w-6xl mx-auto ">
+    <h1 class="text-5xl font-black leading-tight text-gray-900 border-black border-b-4 -mx-4 px-8 py-2">
+      {{ title }}
+    </h1>
+    <div class="py-8 leading-8 text-gray-600 -mx-4 px-8 border-b-4 border-black">
+      <p class="text-xl">{{ intro.text }}</p>
+    </div>
+      {% if draft %}
+      <h2 class="mt-4 text-red-700 font-black text-center">(This Post is a Draft)</h2>
+      {% endif %}
+    <div class="prose-lg prose-gray text-gray-800 blogPost px-4" >{{ content }}</div>
+    <!-- <div class="mt-4 px-4 pt-4 border-t-2 border-black">
+      Leave a Comment via Nostr:
+      <script src="https://nocomment.fiatjaf.com/embed.js" id="nocomment"></script> -->
+      <!-- </div> -->
+  </div>
+</main>
+{% if meta.has_code %}
+{%- render "partials/snippets/render-code" -%}
+{% endif %}
+{% endblock %}

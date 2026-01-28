@@ -1,0 +1,13 @@
+computer.javiergonzalez.io {
+	reverse_proxy localhost:4096
+}
+
+dev.computer.javiergonzalez.io {
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy localhost:3001
+	}
+	handle {
+		reverse_proxy localhost:5173
+	}
+}

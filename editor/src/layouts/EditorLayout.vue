@@ -5,6 +5,15 @@
       <div class="header-content">
         <h1 class="app-title">Blog Editor</h1>
         <div class="header-actions">
+          <button
+            class="theme-toggle"
+            :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+            @click="toggleTheme"
+            title="Toggle theme"
+          >
+            <span v-if="isDark">☀️</span>
+            <span v-else>🌙</span>
+          </button>
           <slot name="header-actions">
             <!-- Placeholder for future actions -->
           </slot>
@@ -66,6 +75,35 @@ const handleResize = () => {
   }
 };
 
+// Theme handling (persisted to localStorage and applied to document)
+const THEME_KEY = 'editor:theme';
+const isDark = ref(false);
+
+const applyTheme = (dark: boolean) => {
+  isDark.value = dark;
+  const theme = dark ? 'dark' : 'light';
+  try {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+  } catch (e) {
+    // ignore
+  }
+};
+
+const toggleTheme = () => applyTheme(!isDark.value);
+
+onMounted(() => {
+  // initialize from localStorage or system preference
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'dark') applyTheme(true);
+    else if (saved === 'light') applyTheme(false);
+    else applyTheme(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  } catch (e) {
+    applyTheme(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+});
+
 onMounted(() => {
   window.addEventListener('resize', handleResize);
   // Initial check
@@ -82,12 +120,12 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--bg);
 }
 
 .editor-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border);
   padding: 1rem 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -103,7 +141,7 @@ onUnmounted(() => {
   margin: 0;
   font-size: 1.75rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text);
 }
 
 .header-actions {
@@ -120,8 +158,8 @@ onUnmounted(() => {
 
 .editor-sidebar {
   width: 250px;
-  background-color: #fafafa;
-  border-right: 1px solid #e0e0e0;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
   overflow-y: auto;
   transition: transform 0.3s ease;
   flex-shrink: 0;
@@ -146,7 +184,7 @@ onUnmounted(() => {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  background-color: #007bff;
+  background-color: var(--primary);
   color: white;
   border: none;
   font-size: 1.5rem;
@@ -156,7 +194,7 @@ onUnmounted(() => {
 }
 
 .sidebar-toggle:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-700);
 }
 
 /* Mobile styles */
@@ -200,7 +238,7 @@ onUnmounted(() => {
 
 .editor-sidebar::-webkit-scrollbar-thumb,
 .editor-content::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: var(--scroll-thumb);
   border-radius: 4px;
 }
 
