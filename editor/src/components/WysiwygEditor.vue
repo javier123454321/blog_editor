@@ -25,6 +25,9 @@
       <button @click="formatLink" title="Insert Link" type="button">
         Link
       </button>
+      <button @click="formatFootnote" title="Insert Footnote" type="button">
+        Note
+      </button>
     </div>
     <div
       ref="editorRef"
@@ -174,6 +177,49 @@ function formatLink() {
     document.execCommand('createLink', false, url);
     handleInput();
   }
+}
+
+function formatFootnote() {
+  if (!editorRef.value) return;
+  
+  // Get current markdown content to find next footnote number
+  const currentMarkdown = htmlToMarkdown(editorRef.value.innerHTML);
+  
+  // Find the highest existing footnote number
+  const refMatches = currentMarkdown.match(/<a name="ref(\d+)">/g);
+  let nextNum = 1;
+  if (refMatches) {
+    const numbers = refMatches.map(m => {
+      const match = m.match(/<a name="ref(\d+)">/);
+      return match ? parseInt(match[1], 10) : 0;
+    });
+    nextNum = Math.max(...numbers) + 1;
+  }
+  
+  // Create the reference HTML to insert at cursor
+  const refHtml = `<a name="ref${nextNum}">[(${nextNum})](#note${nextNum})</a>`;
+  
+  // Insert at cursor position
+  document.execCommand('insertHTML', false, refHtml);
+  
+  // Get updated content and add note to the Notes section
+  let markdown = htmlToMarkdown(editorRef.value.innerHTML);
+  
+  // Check if Notes section exists
+  const notesHeaderRegex = /## \*\*Notes\*\*/;
+  const noteEntry = `\n\n<a name="note${nextNum}">**${nextNum}.**</a> [[Back]](#ref${nextNum})`;
+  
+  if (notesHeaderRegex.test(markdown)) {
+    // Append to existing Notes section
+    markdown = markdown + noteEntry;
+  } else {
+    // Create Notes section
+    markdown = markdown + '\n\n## **Notes**' + noteEntry;
+  }
+  
+  // Update the editor with new content
+  emit('update:modelValue', markdown);
+  editorRef.value.innerHTML = markdownToHtml(markdown);
 }
 
 function handleKeydown(event: KeyboardEvent) {
