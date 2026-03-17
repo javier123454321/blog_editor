@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node editor-server.ts",
     "dev": "tsx watch editor-server.ts",
+    "build": "tsx editor-server.ts",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
     "lint": "eslint '**/*.{js,ts,vue}' --fix"
