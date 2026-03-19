@@ -232,7 +232,16 @@ app.post('/checkout', (req: Request, res: Response) => {
       return res.status(500).json({ success: false, error: `Failed to checkout branch: ${stderr || error.message}` });
     }
 
-    res.json({ success: true, branch });
+    // Sync with remote after checkout
+    execFile('git', ['pull', '--ff-only'], { cwd: GIT_DIR }, (pullError, pullStdout, pullStderr) => {
+      if (pullError) {
+        console.warn(`git pull after checkout warning: ${pullError.message}`);
+        // Still return success - checkout worked, pull may fail if no upstream
+        return res.json({ success: true, branch, warning: `Branch checked out but failed to sync with remote: ${pullStderr || pullError.message}` });
+      }
+
+      res.json({ success: true, branch, synced: true });
+    });
   });
 });
 
