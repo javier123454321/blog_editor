@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useColorMode } from '@vueuse/core'
 import { useToast } from '@nuxt/ui/composables'
@@ -35,7 +35,16 @@ const {
 const sidebarOpen = ref(false)
 const newFileOpen = ref(false)
 const showFrontmatter = ref(true)
-const mode = ref<'visual' | 'raw'>('visual')
+const mode = ref<'visual' | 'raw' | 'preview'>('visual')
+
+const previewBase = import.meta.env.VITE_BLOG_PREVIEW_URL || 'http://localhost:5178'
+
+const previewUrl = computed(() => {
+  if (!currentPath.value) return `${previewBase}/`
+  let slug = currentPath.value.replace(/^\/+/, '').replace(/\.md$/, '')
+  slug = slug.replace(/\/index$/, '')
+  return `${previewBase}/blog/${slug}/`
+})
 
 async function openFile(path: string) {
   try {
@@ -84,6 +93,10 @@ function onBranchChanged() {
 function onLogout() {
   logout()
   void router.push({ name: 'login' })
+}
+
+function toggleColorMode() {
+  colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 
 function onKeydown(e: KeyboardEvent) {
@@ -138,11 +151,11 @@ onUnmounted(() => {
         <BranchSelector @branch-changed="onBranchChanged" />
         <ProposeChanges />
         <UButton
-          :icon="colorMode.value === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
+          :icon="colorMode === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
           color="neutral"
           variant="ghost"
           aria-label="Toggle theme"
-          @click="colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'"
+          @click="toggleColorMode"
         />
         <UButton
           icon="i-lucide-log-out"
@@ -199,6 +212,14 @@ onUnmounted(() => {
                 :variant="mode === 'raw' ? 'solid' : 'outline'"
                 @click="mode = 'raw'"
               />
+              <UButton
+                size="sm"
+                label="Preview"
+                :color="mode === 'preview' ? 'primary' : 'neutral'"
+                :variant="mode === 'preview' ? 'solid' : 'outline'"
+                :disabled="dirty"
+                @click="mode = 'preview'"
+              />
             </div>
 
             <UButton
@@ -237,12 +258,19 @@ onUnmounted(() => {
           <div class="min-h-0 flex-1 p-3">
             <MarkdownVisualEditor v-if="mode === 'visual'" v-model="body" class="h-full" />
             <UTextarea
-              v-else
+              v-else-if="mode === 'raw'"
               v-model="body"
               class="h-full w-full font-mono text-sm"
               :ui="{ base: 'h-full' }"
               placeholder="Markdown body…"
             />
+            <div v-else class="h-full w-full overflow-hidden rounded border border-default bg-white">
+              <iframe
+                :src="previewUrl"
+                class="h-full w-full border-0 bg-white"
+                title="Blog preview"
+              />
+            </div>
           </div>
         </template>
 

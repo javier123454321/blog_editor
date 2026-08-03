@@ -44,9 +44,13 @@ mise run dev
 # or separately:
 # mise run dev:server   # http://localhost:3001
 # mise run dev:web      # http://localhost:5173
+# mise run dev:blog     # blog submodule watch mode (eleventy + vite) → http://localhost:5178
 ```
 
 Open the URL from the web task (default `http://localhost:5173`). The Vite dev server proxies `/api` → the API.
+
+The **Preview** tab in the editor renders the blog (served by `mise run dev:blog`) in an iframe.
+Set `VITE_BLOG_PREVIEW_URL` in `.env` if the blog dev server is not on `http://localhost:5178`.
 
 ## Scripts
 

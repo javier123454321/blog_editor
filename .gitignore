@@ -36,3 +36,6 @@ components.d.ts
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# Playwright CLI artifacts
+.playwright-cli/

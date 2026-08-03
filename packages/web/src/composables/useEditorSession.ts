@@ -54,8 +54,10 @@ export function useEditorSession() {
     const parsed = parseFrontmatter(data.content)
     frontmatter.value = parsed.frontmatter
     body.value = parsed.body
-    originalContent.value = data.content
     currentPath.value = data.path
+    // Baseline on the parsed/stringified form so an unmodified file is not
+    // flagged as dirty (parsing normalizes whitespace around the fence).
+    originalContent.value = content.value
     saveState.value = 'idle'
     saveError.value = null
   }
