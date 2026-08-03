@@ -18,6 +18,11 @@ const originalContent = ref('')
 const saveState = ref<'idle' | 'saving' | 'saved' | 'error'>('idle')
 const saveError = ref<string | null>(null)
 
+/** Content of the current file on origin's base branch (normalized); null when it doesn't exist remotely */
+const remoteContent = ref<string | null>(null)
+const remoteChecking = ref(false)
+const discarding = ref(false)
+
 const content = computed({
   get: () => stringifyFrontmatter(frontmatter.value, body.value),
   set: (value: string) => {
@@ -30,6 +35,12 @@ const content = computed({
 const dirty = computed(() => {
   if (!currentPath.value) return false
   return content.value !== originalContent.value
+})
+
+/** True when the current file exists on the remote base branch and its content differs */
+const differsFromRemote = computed(() => {
+  if (!currentPath.value || remoteContent.value === null) return false
+  return content.value !== remoteContent.value
 })
 
 export function useEditorSession() {
@@ -60,6 +71,47 @@ export function useEditorSession() {
     originalContent.value = content.value
     saveState.value = 'idle'
     saveError.value = null
+    await refreshRemoteStatus()
+  }
+
+  async function refreshRemoteStatus() {
+    if (!currentPath.value) {
+      remoteContent.value = null
+      return
+    }
+    remoteChecking.value = true
+    try {
+      const data = await api<{ exists: boolean; content: string | null }>(
+        `/file/remote?path=${encodeURIComponent(currentPath.value)}`,
+      )
+      if (data.exists && typeof data.content === 'string') {
+        const parsed = parseFrontmatter(data.content)
+        remoteContent.value = stringifyFrontmatter(parsed.frontmatter, parsed.body)
+      } else {
+        remoteContent.value = null
+      }
+    } catch (error) {
+      console.error('Failed to check remote status:', error)
+      remoteContent.value = null
+    } finally {
+      remoteChecking.value = false
+    }
+  }
+
+  async function discardChanges() {
+    if (!currentPath.value) return
+
+    discarding.value = true
+    try {
+      await api('/file/discard', {
+        method: 'POST',
+        body: { path: currentPath.value },
+      })
+      await loadFile(currentPath.value)
+      await refreshRemoteStatus()
+    } finally {
+      discarding.value = false
+    }
   }
 
   async function saveFile() {
@@ -101,6 +153,7 @@ export function useEditorSession() {
     originalContent.value = ''
     saveState.value = 'idle'
     saveError.value = null
+    remoteContent.value = null
   }
 
   function setBody(value: string) {
@@ -122,11 +175,15 @@ export function useEditorSession() {
     dirty,
     saveState,
     saveError,
+    differsFromRemote,
+    remoteChecking,
+    discarding,
     refreshFiles,
     loadFile,
     saveFile,
     createFile,
     clearFile,
+    discardChanges,
     setBody,
     setFrontmatter,
   }

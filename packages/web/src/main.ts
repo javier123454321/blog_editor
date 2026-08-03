@@ -20,6 +20,11 @@ const router = createRouter({
       name: 'editor',
       component: () => import('./pages/Editor.vue'),
     },
+    {
+      path: '/edit/:pathMatch(.*)*',
+      name: 'edit',
+      component: () => import('./pages/Editor.vue'),
+    },
   ],
 })
 
