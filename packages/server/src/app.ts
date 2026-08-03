@@ -26,8 +26,10 @@ export function createApp(): Express {
   app.use(authGate)
 
   app.use(authRoutes)
-  app.use(filesRoutes)
+  // Git router must come before the files router so /file/remote and
+  // /file/discard are not shadowed by the /file/* splat.
   app.use(gitRoutes)
+  app.use(filesRoutes)
   app.use(githubRoutes)
 
   return app

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
 import path from 'path'
-import { PathError, resolveWithin } from './paths'
+import { PathError, resolveWithin, toGitRelativePath } from './paths'
 
 const base = path.join('/tmp', 'blog-editor-test-base')
 
@@ -27,5 +27,26 @@ describe('resolveWithin', () => {
 
   test('rejects empty path', () => {
     expect(() => resolveWithin(base, '')).toThrow(PathError)
+  })
+})
+
+describe('toGitRelativePath', () => {
+  const gitDir = path.join('/tmp', 'blog-editor-repo')
+  const blogDir = path.join(gitDir, 'src')
+
+  test('prefixes paths under the blog content dir with the subdir', () => {
+    expect(toGitRelativePath(gitDir, blogDir, 'posts/hello.md')).toBe('src/posts/hello.md')
+  })
+
+  test('handles top-level files', () => {
+    expect(toGitRelativePath(gitDir, blogDir, 'index.md')).toBe('src/index.md')
+  })
+
+  test('normalizes separators to forward slashes', () => {
+    expect(toGitRelativePath(gitDir, blogDir, 'a\\b.md')).toBe('src/a/b.md')
+  })
+
+  test('rejects paths escaping the blog dir', () => {
+    expect(() => toGitRelativePath(gitDir, blogDir, '../secret')).toThrow(PathError)
   })
 })

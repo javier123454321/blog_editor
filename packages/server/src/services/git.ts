@@ -1,5 +1,6 @@
 import { config } from '../config'
 import { runGit } from '../lib/exec'
+import { toGitRelativePath } from '../lib/paths'
 
 export interface BranchInfo {
   name: string
@@ -83,4 +84,38 @@ export async function defaultBaseBranch(): Promise<string> {
     // fall through
   }
   return 'main'
+}
+
+export interface RemoteFileInfo {
+  exists: boolean
+  content: string | null
+}
+
+/** Content of a file as it exists on the origin base branch (e.g. origin/main). */
+export async function getRemoteFile(relativePath: string): Promise<RemoteFileInfo> {
+  const gitPath = toGitRelativePath(config.gitDir, config.blogDir, relativePath)
+  const base = await defaultBaseBranch()
+
+  try {
+    const { stdout } = await runGit(['show', `origin/${base}:${gitPath}`], config.gitDir)
+    return { exists: true, content: stdout }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    if (
+      message.includes('does not exist') ||
+      message.includes('unknown revision') ||
+      message.includes('bad revision') ||
+      message.includes('invalid object')
+    ) {
+      return { exists: false, content: null }
+    }
+    throw error
+  }
+}
+
+/** Restore a single file to its content on the origin base branch. */
+export async function discardFileChanges(relativePath: string): Promise<void> {
+  const gitPath = toGitRelativePath(config.gitDir, config.blogDir, relativePath)
+  const base = await defaultBaseBranch()
+  await runGit(['checkout', `origin/${base}`, '--', gitPath], config.gitDir)
 }

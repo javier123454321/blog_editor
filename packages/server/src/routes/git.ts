@@ -78,4 +78,38 @@ router.post('/push', async (_req, res) => {
   }
 })
 
+router.get('/file/remote', async (req, res) => {
+  const { path } = req.query as { path?: string }
+
+  if (!path || typeof path !== 'string') {
+    return res.status(400).json({ success: false, error: 'Path is required' })
+  }
+
+  try {
+    const result = await gitService.getRemoteFile(path)
+    res.json({ success: true, ...result })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to read remote file'
+    console.error('Error reading remote file:', error)
+    res.status(500).json({ success: false, error: `Failed to read remote file: ${message}` })
+  }
+})
+
+router.post('/file/discard', async (req, res) => {
+  const { path } = req.body as { path?: unknown }
+
+  if (!path || typeof path !== 'string') {
+    return res.status(400).json({ success: false, error: 'Path is required' })
+  }
+
+  try {
+    await gitService.discardFileChanges(path)
+    res.json({ success: true })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to discard changes'
+    console.error('Error discarding file changes:', error)
+    res.status(500).json({ success: false, error: `Failed to discard changes: ${message}` })
+  }
+})
+
 export default router

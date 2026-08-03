@@ -49,6 +49,16 @@ export function resolveWithin(baseDir: string, relativePath: string): string {
   return resolvedPath
 }
 
+/**
+ * Convert a path relative to `blogDir` into a path relative to `gitDir`.
+ * Files on disk live under `gitDir/<blogSubDir>/…`, so a "foo.md" in the blog
+ * content directory maps to e.g. "src/foo.md" in the git repository.
+ */
+export function toGitRelativePath(gitDir: string, blogDir: string, relativePath: string): string {
+  const fullPath = resolveWithin(blogDir, relativePath)
+  return path.relative(gitDir, fullPath).split(path.sep).join('/')
+}
+
 export function ensureDirForFile(filePath: string): void {
   const dir = path.dirname(filePath)
   if (!fs.existsSync(dir)) {
