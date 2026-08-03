@@ -1,50 +1,75 @@
-To run this application, you need to set up and run both the **Backend API** (root directory) and the **Frontend Editor** (`editor/` directory).
+# Blog Editor
 
-### 1. Initial Setup
+Visual markdown editor for an 11ty blog with local git ops and GitHub PR creation.
 
-First, install dependencies and initialize the blog content submodule:
+Monorepo layout:
+
+- `packages/server` — Express API on **Bun**
+- `packages/web` — Vue 3 + Vite + **Nuxt UI** (`UEditor` for visual markdown)
+- `blog/` — git submodule with site content
+
+## Prerequisites
+
+- [mise](https://mise.jdx.dev/) (installs Bun)
+- Git
 
 ```bash
-# Install dependencies for both backend and frontend
-npm install
-
-# Initialize the blog content submodule
+mise install
+mise run install   # or: bun install
 git submodule update --init --recursive
 ```
 
-### 2. Configuration (.env)
+## Configuration
 
-You need to configure the environment variables for authentication.
-
-1.  Copy the example file:
-    ```bash
-    cp .env.example .env
-    ```
-2.  Edit `.env` and set a **SHA-256 hash** of your desired password in `BLOG_EDITOR_PASSWORD_HASH`.
-    *   You can generate a hash in your terminal:
-        ```bash
-        # MacOS/Linux
-        echo -n "your_password" | shasum -a 256
-        ```
-    *   Paste the output into the `.env` file.
-
-### 3. Running the App
-
-You will need two terminal sessions running simultaneously.
-
-**Terminal 1: Backend API**
-Starts the Express server on port 3001 (default).
 ```bash
-npm run dev
+cp .env.example .env
 ```
 
-**Terminal 2: Frontend Editor**
-Starts the Vite development server for the Vue app.
+Set `BLOG_EDITOR_PASSWORD_HASH` to a SHA-256 hex digest of your password:
+
 ```bash
-npm run dev -w editor
-# OR
-cd editor && npm run dev
+echo -n "your_password" | shasum -a 256
 ```
 
-Once both are running, open the URL shown in Terminal 2 (usually `http://localhost:5173`).
+Optional GitHub PR support:
 
+- `GITHUB_TOKEN`
+- `GITHUB_REPO_OWNER`
+- `GITHUB_REPO_NAME`
+
+## Develop
+
+```bash
+mise run dev
+# or separately:
+# mise run dev:server   # http://localhost:3001
+# mise run dev:web      # http://localhost:5173
+```
+
+Open the URL from the web task (default `http://localhost:5173`). The Vite dev server proxies `/api` → the API.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `mise run install` | `bun install` workspaces |
+| `mise run dev` | API + web |
+| `mise run build` | Build packages |
+| `mise run test` | Unit tests |
+| `mise run typecheck` | TypeScript check |
+
+## API (auth)
+
+Most routes require header `X-Auth-Password: <plaintext password>`.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| POST | `/auth` | Verify password |
+| GET | `/files` | List markdown files |
+| GET/POST | `/file?path=` | Read / write file |
+| GET | `/branches` | List branches |
+| POST | `/checkout` | Switch branch |
+| POST | `/branch/create` | Create branch |
+| POST | `/commit` | Commit working tree |
+| POST | `/push` | Push |
+| POST | `/pr` | Create or update PR |

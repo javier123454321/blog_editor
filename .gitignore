@@ -1,9 +1,12 @@
-# Node
+# Dependencies
 node_modules/
+
+# Env
 .env
 
 # Editor
 .vscode/
+.idea/
 
 # Build
 dist/
@@ -14,9 +17,22 @@ logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
+bun-debug.log*
 
 # OS
 .DS_Store
 Thumbs.db
-node_modules
+
+# Nuxt UI / unplugin generated
+auto-imports.d.ts
+components.d.ts
+**/auto-imports.d.ts
+**/components.d.ts
+
+# Local deploy scratch
+.local_www/
+
+# Locks from old package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
