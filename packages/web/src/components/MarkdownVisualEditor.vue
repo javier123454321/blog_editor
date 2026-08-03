@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { useToast } from '@nuxt/ui/composables'
 import { Footnote } from '@/extensions/footnote'
 import { ImagePreview } from '@/extensions/image'
+import { RawHtml, RawHtmlInline } from '@/extensions/rawHtml'
 import { imageAltFromUrl } from '@/lib/images'
 import ImagePickerModal from '@/components/ImagePickerModal.vue'
 
@@ -184,6 +185,8 @@ const suggestionItems = [
       :extensions="[
         Footnote,
         ImagePreview.configure({ baseUrl: previewBase }),
+        RawHtml,
+        RawHtmlInline,
       ]"
       :handlers="handlers"
     >
