@@ -64,4 +64,30 @@ router.post(['/file', '/file/*'], (req, res) => {
   }
 })
 
+router.get('/images', (_req, res) => {
+  try {
+    const images = filesService.listImages()
+    res.json({ images })
+  } catch {
+    res.status(500).json({ success: false, error: 'Failed to list images' })
+  }
+})
+
+router.post('/upload', (req, res) => {
+  try {
+    const { name, base64 } = req.body as { name?: unknown; base64?: unknown }
+    if (typeof name !== 'string' || typeof base64 !== 'string') {
+      return res.status(400).json({ success: false, error: 'Name and image data are required' })
+    }
+
+    const result = filesService.saveImage(name, base64)
+    res.json({ success: true, ...result })
+  } catch (error) {
+    if (error instanceof PathError) {
+      return res.status(error.status).json({ success: false, error: error.message })
+    }
+    res.status(500).json({ success: false, error: 'Failed to upload image' })
+  }
+})
+
 export default router

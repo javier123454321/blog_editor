@@ -15,7 +15,7 @@ export function createApp(): Express {
       origin: config.corsOrigin,
     }),
   )
-  app.use(express.json({ limit: '5mb' }))
+  app.use(express.json({ limit: '25mb' }))
 
   app.get('/', (_req, res) => {
     res.json({ message: 'Blog Editor API is running' })

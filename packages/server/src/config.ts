@@ -14,7 +14,11 @@ export const config = {
   port: Number(process.env.PORT) || 3001,
   repoRoot,
   /** Markdown content directory inside the blog submodule */
-  blogDir: process.env.BLOG_DIR || path.join(repoRoot, 'blog', 'src', 'blog'),
+  blogDir: process.env.BLOG_DIR || path.join(repoRoot, 'blog', 'src'),
+  /** Directory where uploaded blog images are stored */
+  imagesDir: process.env.IMAGES_DIR || path.join(repoRoot, 'blog', 'src', 'images'),
+  /** URL prefix images are referenced by in markdown / on the site */
+  imagesUrlPrefix: process.env.IMAGES_URL_PREFIX || '/images',
   /** Git working tree (blog submodule root) */
   gitDir: process.env.GIT_DIR || path.join(repoRoot, 'blog'),
   passwordHash: process.env.BLOG_EDITOR_PASSWORD_HASH || '',
