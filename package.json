@@ -8,6 +8,7 @@
     "dev": "bun run --filter '*' dev",
     "dev:server": "bun run --filter @blog-editor/server dev",
     "dev:web": "bun run --filter @blog-editor/web dev",
+    "dev:blog": "npm --prefix blog run dev",
     "build": "bun run --filter '*' build",
     "test": "bun run --filter '*' test",
     "lint": "bun run --filter '*' lint",
@@ -15,6 +16,7 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "bun-types": "^1.3.14"
+    "bun-types": "^1.3.14",
+    "jsdom": "^30.0.1"
   }
 }

@@ -1,7 +1,28 @@
 <script setup lang="ts">
 import type { EditorToolbarItem } from '@nuxt/ui'
+import type { Editor } from '@tiptap/core'
+import { Footnote } from '@/extensions/footnote'
 
 const body = defineModel<string>({ required: true })
+
+function nextFootnoteNumber(markdown: string): number {
+  const refs = Array.from(markdown.matchAll(/<a name="ref(\d+)">/g), (m) => parseInt(m[1], 10))
+  const max = refs.length ? Math.max(...refs) : 0
+  return max + 1
+}
+
+function addFootnote(editor: Editor) {
+  const next = nextFootnoteNumber(editor.getMarkdown())
+
+  editor.chain().focus().insertContent({ type: 'footnote', attrs: { anchor: 'ref', n: next } }).run()
+
+  const md = editor.getMarkdown()
+  const noteEntry = `\n\n<a name="note${next}">**${next}.**</a> [[Back]](#ref${next})`
+  const hasNotesSection = /^#{1,6}\s*[^*]*(?:\*\*)?Notes(?:\*\*)?[^*]*$/m.test(md)
+  const updated = hasNotesSection ? md + noteEntry : `${md}\n\n## Notes${noteEntry}`
+
+  editor.commands.setContent(updated, { contentType: 'markdown' })
+}
 
 const toolbarItems: EditorToolbarItem[][] = [
   [
@@ -33,9 +54,18 @@ const toolbarItems: EditorToolbarItem[][] = [
   ],
   [
     { kind: 'link', icon: 'i-lucide-link', tooltip: { text: 'Link' } },
+    { kind: 'footnote', icon: 'i-lucide-bookmark', tooltip: { text: 'Add footnote' } },
     { kind: 'horizontalRule', icon: 'i-lucide-separator-horizontal', tooltip: { text: 'Divider' } },
   ],
 ]
+
+const handlers = {
+  footnote: {
+    canExecute: () => true,
+    execute: (editor: Editor) => ({ run: () => addFootnote(editor) }),
+    isActive: () => false,
+  },
+}
 
 const suggestionItems = [
   [
@@ -60,14 +90,20 @@ const suggestionItems = [
       content-type="markdown"
       placeholder="Write… type / for commands"
       class="flex min-h-0 flex-1 flex-col"
-      :ui="{ base: 'px-4 py-3 sm:px-6 flex-1 overflow-y-auto min-h-0' }"
+      :ui="{
+        content: 'relative size-full min-h-0 flex-1 flex flex-col',
+        base: 'px-4 py-3 sm:px-6 flex-1 min-h-0 overflow-y-auto overflow-x-hidden w-full',
+      }"
+      :extensions="[Footnote]"
+      :handlers="handlers"
     >
       <UEditorToolbar
         :editor="editor"
         :items="toolbarItems"
-        class="sticky top-0 z-10 border-b border-default bg-default px-2 py-1.5 overflow-x-auto"
+        class="sticky top-0 z-10 border-b border-default bg-default px-2 py-4 overflow-x-auto"
       />
       <UEditorSuggestionMenu :editor="editor" :items="suggestionItems" />
+      <UEditorDragHandle :editor="editor" />
     </UEditor>
   </div>
 </template>
