@@ -2,6 +2,11 @@
 
 Visual markdown editor for the 11ty blog at `blog/`. Bun workspaces monorepo; toolchain managed by `mise` (Bun 1.3.14).
 
+## Production Deployment
+
+See [`status/AGENTS.prod.md`](status/AGENTS.prod.md) for the full production deployment guide.
+Progress logs: [`status/progress/`](status/progress/)
+
 ## Architecture (non-obvious)
 
 - **The `blog/` directory is a git submodule** (git@github.com:javier123454321/blog.git), currently on `main`. All content edits, git operations, and PRs happen *inside the submodule* — never at the monorepo root. The editor repo only tracks submodule-pointer commits. Run `git submodule update --init --recursive` after cloning; checkout works inside `blog/`.
